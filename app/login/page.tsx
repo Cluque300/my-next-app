@@ -1,4 +1,4 @@
-"use client";
+// app/login/loginpage.tsx
 
 import React from 'react';
 import LoginForm from './loginform';
@@ -14,3 +14,5 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
+
+

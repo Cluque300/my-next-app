@@ -1,13 +1,32 @@
-/* app/about/AboutPage.module.css */
+/* app/about/aboutpage.module.css */
+
 .container {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .link {
-    color: blue;
-    text-decoration: underline;
-    margin-top: 20px;
-    display: block;
-  }
-  
+  text-align: center; /* Centra el contenido */
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px; /* Espacio debajo de la imagen */
+}
+
+.description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 20px; /* Espacio debajo del texto */
+}
+
+.link {
+  font-size: 1rem;
+  color: blue;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

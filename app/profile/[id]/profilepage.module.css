@@ -1,0 +1,33 @@
+/* app/profile/profilepage.module.css */
+
+.container {
+  text-align: center;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.logoutButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.logoutButton:hover {
+  background-color: #e60000;
+}
+
+
+  

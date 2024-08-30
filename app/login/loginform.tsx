@@ -1,4 +1,6 @@
-"use client";
+// app/login/loginform.tsx
+
+'use client'; // Asegúrate de que el componente se ejecute en el cliente
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -14,7 +16,9 @@ const LoginForm: React.FC = () => {
 
     // Simulación de validación de credenciales
     if (email === 'user@example.com' && password === 'password') {
-      router.push('/');
+      // Suponiendo que el ID del usuario es '123' para este ejemplo
+      const userId = '123';
+      router.push(`/profile/${userId}`);
     } else {
       alert('Credenciales incorrectas');
     }
@@ -48,3 +52,8 @@ const LoginForm: React.FC = () => {
 };
 
 export default LoginForm;
+
+
+
+
+

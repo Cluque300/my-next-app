@@ -1,4 +1,5 @@
 // app/components/MyComponent.tsx
+
 import React, { useEffect, useRef, useState } from 'react';
 
 interface MyComponentProps {
@@ -11,9 +12,8 @@ const MyComponent: React.FC<MyComponentProps> = ({ showElement }) => {
 
   useEffect(() => {
     if (myElementRef.current && showElement) {
-      // Manipulación segura del DOM usando refs
       const element = myElementRef.current;
-      const someChild = document.getElementById('someChild');
+      const someChild = element.querySelector('#someChild'); // Usa querySelector en lugar de getElementById
       if (someChild) {
         element.removeChild(someChild);
       }
@@ -38,3 +38,6 @@ const MyComponent: React.FC<MyComponentProps> = ({ showElement }) => {
 };
 
 export default MyComponent;
+
+
+

@@ -1,17 +1,23 @@
 // app/components/SearchBar.tsx
 
-'use client'; // Esto marca el archivo como un componente de cliente
+'use client'; // Asegúrate de que es un componente de cliente
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Importa useRouter para la redirección
 import styles from './SearchBar.module.css';
 
-const SearchBar = () => {
+const SearchBar: React.FC = () => {
   const [query, setQuery] = useState('');
+  const router = useRouter(); // Inicializa el enrutador
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Searching for:', query);
-    // Aquí podrías redirigir a una página de resultados o hacer una búsqueda
+    
+    if (query.trim().toLowerCase() === 'about') {
+      router.push('/about'); // Redirige a la página "about"
+    } else {
+      alert('Búsqueda no válida. Solo "about" es permitido.'); // Muestra un mensaje de error
+    }
   };
 
   return (
@@ -29,4 +35,7 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
+
+
+
 
