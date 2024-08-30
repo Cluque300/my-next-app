@@ -1,0 +1,36 @@
+/* homepage.module.css */
+
+.pageContainer {
+    padding: 20px; /* Opcional: Agrega relleno a la página */
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 3rem; /* Tamaño de fuente más grande */
+    color: #333; /* Color opcional */
+    text-align: center; /* Centra el texto en el h1 */
+    margin: 0; /* Elimina el margen predeterminado del h1 */
+  }
+  
+  .imageWrapper {
+    max-width: 600px; /* Máximo ancho del contenedor */
+    margin: 0 auto; /* Centra el contenedor de la imagen si es necesario */
+  }
+  
+  .linkContainer {
+    display: flex;
+    gap: 20px; /* Ajusta el valor según el espaciado deseado */
+    justify-content: center;
+  }
+  
+  .link {
+    color: #0070f3; /* Ajusta el color según el diseño */
+    text-decoration: none;
+    font-size: 16px; /* Ajusta el tamaño del texto según el diseño */
+  }
+  
+  .link:hover {
+    text-decoration: underline;
+  }
+  
+  

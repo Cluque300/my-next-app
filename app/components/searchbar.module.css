@@ -1,0 +1,29 @@
+/* app/components/SearchBar.module.css */
+
+.searchBar {
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto; /* Opcional: Centra la barra de búsqueda */
+  }
+  
+  .input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .button {
+    padding: 8px 16px;
+    border: none;
+    background-color: blue;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: darkblue;
+  }
+  

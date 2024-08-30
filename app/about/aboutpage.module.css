@@ -1,0 +1,13 @@
+/* app/about/AboutPage.module.css */
+.container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .link {
+    color: blue;
+    text-decoration: underline;
+    margin-top: 20px;
+    display: block;
+  }
+  
