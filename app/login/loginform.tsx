@@ -1,57 +1,67 @@
 // app/login/loginform.tsx
+'use client';
 
-'use client'; // Asegúrate de que el componente se ejecute en el cliente
-
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import styles from './login.module.css';
 
-const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState('');
+export default function LoginForm() {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    // Simulación de validación de credenciales
-    if (email === 'user@example.com' && password === 'password') {
-      // Suponiendo que el ID del usuario es '123' para este ejemplo
-      const userId = '123';
-      router.push(`/profile/${userId}`);
+    // Lógica para manejar el inicio de sesión
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+      // Redirigir o mostrar mensaje de éxito
     } else {
-      alert('Credenciales incorrectas');
+      // Mostrar error
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <label htmlFor="email" className={styles.label}>Correo Electrónico</label>
-      <input
-        type="email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className={styles.input}
-      />
-      
-      <label htmlFor="password" className={styles.label}>Contraseña</label>
-      <input
-        type="password"
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        className={styles.input}
-      />
-      
-      <button type="submit" className={styles.button}>Iniciar Sesión</button>
+    <form onSubmit={handleSubmit} className={styles.formAuthSmall}>
+      <div className={styles.inputGroup}>
+        <label htmlFor="username" className={styles.label}>Nombre de usuario</label>
+        <input 
+          type="text" 
+          id="username" 
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className={styles.input}
+          required
+        />
+      </div>
+      <div className={styles.inputGroup}>
+        <label htmlFor="password" className={styles.label}>Contraseña</label>
+        <input 
+          type="password" 
+          id="password" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className={styles.input}
+          required
+        />
+      </div>
+      <div className={styles.actions}>
+        <button type="submit" className={styles.button}>Iniciar sesión</button>
+      </div>
+      <div className={styles.linkGroup}>
+        <a href="/register">Registrarse</a>
+        <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
+      </div>
     </form>
   );
-};
+}
 
-export default LoginForm;
 
 
 

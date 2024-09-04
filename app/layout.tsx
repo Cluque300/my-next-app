@@ -1,7 +1,7 @@
 // app/layout.tsx
 
 import React from 'react';
-import SearchBar from './components/SearchBar'; // Asegúrate de que la ruta es correcta
+import SearchBar from './components/searchbar'; // Asegúrate de que la ruta es correcta
 import './globals.css'; // Incluye tus estilos globales
 
 export const metadata = {
@@ -18,7 +18,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           <SearchBar /> {/* Aquí está la barra de búsqueda */}
         </header>
         <main>{children}</main>
-        <footer>
+        <footer className="footer">
           <p>© 2024 Carlos Luque</p>
         </footer>
       </body>
@@ -27,6 +27,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default RootLayout;
+
 
 
 

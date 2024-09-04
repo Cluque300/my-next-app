@@ -1,18 +1,23 @@
-// app/login/loginpage.tsx
-
-import React from 'react';
+// app/login/page.tsx
 import LoginForm from './loginform';
 import styles from './login.module.css';
 
-const LoginPage: React.FC = () => {
+export default function LoginPage() {
   return (
-    <div className={styles.pageContainer}>
-      <h1 className={styles.title}>Iniciar Sesión</h1>
-      <LoginForm />
+    <div className={styles.container}>
+      <div className={styles.authBox}>
+        <div className={styles.top}>
+          <img src="/images/isotipohb.svg" alt="Logo Human Bionics" />
+          <strong>Human</strong> <span>Bionics</span>
+        </div>
+        <div className={styles.card}>
+          <h1 className={styles.title}>Iniciar sesión</h1>
+          <LoginForm />
+        </div>
+      </div>
     </div>
   );
-};
+}
 
-export default LoginPage;
 
 
