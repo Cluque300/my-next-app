@@ -4,12 +4,12 @@ import { prisma } from '@/lib/prisma'; // Asegúrate de que esta ruta es correct
 import { User } from '@prisma/client'; // Importa el tipo User
 
 export async function POST(request: Request) {
-  const { email, password } = await request.json();
+  const { username, password } = await request.json();
   
   try {
-    // Encuentra al usuario por correo electrónico
+    // Encuentra al usuario por nombre de usuario
     const user: User | null = await prisma.user.findUnique({
-      where: { email },
+      where: { username },
     });
 
     // Verifica si el usuario no existe
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     }
 
     // Respuesta exitosa y configuración de cookies
-    const response = NextResponse.json({ redirectUrl: '/inicio' });
+    const response = NextResponse.json({ redirectUrl: '/users/${user.id}' });
 
     response.cookies.set('user', JSON.stringify(user), {
       httpOnly: true,
@@ -43,4 +43,5 @@ export async function POST(request: Request) {
     console.error('Error del servidor:', error);
     return NextResponse.json({ message: 'Error del servidor' }, { status: 500 });
   }
-} // <- Aquí está la llave de cierre que faltaba
+}
+

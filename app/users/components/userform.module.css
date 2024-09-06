@@ -1,0 +1,86 @@
+/* UserForm.module.css */
+
+.container {
+    margin: 0 auto;
+    padding: 2rem;
+    max-width: 800px;
+  }
+  
+  .card {
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-group input {
+    flex: 1;
+  }
+  
+  .input-group-append {
+    margin-left: 0.5rem;
+  }
+  
+  .custom-input-file {
+    display: none;
+  }
+  
+  .custom-input-file + label {
+    cursor: pointer;
+  }
+  
+  .custom-input-file + label i {
+    margin-right: 0.5rem;
+  }
+  
+  .fancy-radio {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+  }
+  
+  .fancy-radio input {
+    margin-right: 0.5rem;
+  }
+  
+  .btn-primary {
+    background-color: #0070f3;
+    border: none;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .btn-primary:hover {
+    background-color: #005bb5;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  input[type="text"], input[type="number"], input[type="password"], select {
+    width: 100%;
+  }
+  
+  

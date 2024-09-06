@@ -1,24 +1,19 @@
-// prisma/schema.prisma
-datasource db {
-  provider = "mysql"  // Cambia el proveedor según tu base de datos
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
-// Define tus modelos aquí
-model User {
-  id          Int      @id @default(autoincrement())
-  fullname    String
-  fulllastname String
-  email       String   @unique
-  username    String   @unique
-  password    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-
-
+model user {
+  id           Int      @id @default(autoincrement())
+  fullname     String
+  fulllastname String
+  email        String   @unique(map: "User_email_key")
+  username     String   @unique(map: "User_username_key")
+  password     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+}

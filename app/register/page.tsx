@@ -1,18 +1,20 @@
-'use client';
+"use client";
 
 import React, { useState } from 'react';
 import styles from './register.module.css';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const RegisterPage: React.FC = () => {
   const [fullname, setFullname] = useState('');
-  const [fulllastname, setFullLastname] = useState(''); // Renombrado para evitar conflicto
+  const [fulllastname, setFullLastname] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +38,9 @@ const RegisterPage: React.FC = () => {
       if (response.ok) {
         setSuccess('¡Registro completado con éxito!');
         setError('');
+        setTimeout(() => {
+          router.push('/login'); // Redirige al usuario a la página de inicio de sesión
+        }, 2000); // Redirige después de 2 segundos para mostrar el mensaje de éxito
       } else {
         setError(result.message || 'Error en el registro');
         setSuccess('');
@@ -119,4 +124,5 @@ const RegisterPage: React.FC = () => {
 };
 
 export default RegisterPage;
+
 

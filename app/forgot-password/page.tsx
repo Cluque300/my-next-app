@@ -1,4 +1,3 @@
-// Añade esta línea al inicio del archivo para marcarlo como un componente de cliente
 'use client';
 
 import React, { useState } from 'react';
@@ -9,7 +8,6 @@ const ForgotPasswordPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para manejar el envío del formulario
     console.log('Email:', email);
   };
 
@@ -34,10 +32,15 @@ const ForgotPasswordPage: React.FC = () => {
           <a href="/login">Volver al inicio de sesión</a>
         </div>
       </form>
+      
+      {/* Imagen centrada al final de la página */}
+      <img src="/images/isotipohb.svg" alt="Logo Human Bionics" className={styles.logo} />
     </div>
   );
 };
 
 export default ForgotPasswordPage;
+
+
 
 

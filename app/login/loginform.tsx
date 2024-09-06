@@ -1,4 +1,3 @@
-// app/login/loginform.tsx
 'use client';
 
 import { useState } from 'react';
@@ -11,7 +10,6 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Lógica para manejar el inicio de sesión
     const response = await fetch('/api/login', {
       method: 'POST',
       headers: {
@@ -21,9 +19,11 @@ export default function LoginForm() {
     });
 
     if (response.ok) {
-      // Redirigir o mostrar mensaje de éxito
+      const data = await response.json();
+      window.location.href = data.redirectUrl; // Redirige al usuario a la URL especificada en la respuesta
     } else {
-      // Mostrar error
+      const error = await response.json();
+      alert(error.message); // O manejar el error de otra manera
     }
   };
 
@@ -61,7 +61,6 @@ export default function LoginForm() {
     </form>
   );
 }
-
 
 
 
