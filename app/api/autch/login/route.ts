@@ -1,12 +1,14 @@
+// /app/api/autch/login/route.ts
+
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma'; // Asegúrate de que esta ruta es correcta
 import { User } from '@prisma/client'; // Importa el tipo User
 
 export async function POST(request: Request) {
-  const { username, password } = await request.json();
-  
   try {
+    const { username, password } = await request.json();
+
     // Encuentra al usuario por nombre de usuario
     const user: User | null = await prisma.user.findUnique({
       where: { username },
@@ -18,12 +20,7 @@ export async function POST(request: Request) {
     }
 
     // Compara la contraseña proporcionada con la almacenada en la base de datos
-    const passwordMatch = await new Promise<boolean>((resolve, reject) => {
-      bcrypt.compare(password, user.password, (err, result) => {
-        if (err) reject(err);
-        resolve(result);
-      });
-    });
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
     // Verifica si las contraseñas no coinciden
     if (!passwordMatch) {
@@ -31,11 +28,12 @@ export async function POST(request: Request) {
     }
 
     // Respuesta exitosa y configuración de cookies
-    const response = NextResponse.json({ redirectUrl: '/users/${user.id}' });
+    const response = NextResponse.json({ redirectUrl: `/users/${user.id}` });
 
+    // Configuración de cookies
     response.cookies.set('user', JSON.stringify(user), {
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 60 * 60 * 24 * 7, // 7 días
     });
 
     return response;
@@ -44,4 +42,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Error del servidor' }, { status: 500 });
   }
 }
-

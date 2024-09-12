@@ -1,36 +1,51 @@
-/* app/homepage.module.css */
+/* homepage.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 2rem;
+}
 
-.pageContainer {
-  padding: 20px; /* Opcional: Agrega relleno a la página */
+.header {
+  background: #f8f9fa;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
 
 .title {
-  font-size: 3rem; /* Tamaño de fuente más grande */
-  color: #333; /* Color opcional */
-  text-align: center; /* Centra el texto en el h1 */
-  margin: 0; /* Elimina el margen predeterminado del h1 */
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
-.imageWrapper {
-  max-width: 600px; /* Máximo ancho del contenedor */
-  margin: 0 auto; /* Centra el contenedor de la imagen si es necesario */
+.description {
+  margin-bottom: 1rem;
 }
 
-.linkContainer {
-  display: flex;
-  gap: 20px; /* Ajusta el valor según el espaciado deseado */
-  justify-content: center;
+.navList {
+  list-style: none;
+  padding: 0;
 }
 
-.link {
-  color: #0070f3; /* Ajusta el color según el diseño */
+.navList li {
+  margin: 0.5rem 0;
+}
+
+.navList a {
   text-decoration: none;
-  font-size: 16px; /* Ajusta el tamaño del texto según el diseño */
+  color: #0070f3;
 }
 
-.link:hover {
-  text-decoration: underline;
+.footer {
+  background: #f8f9fa;
+  padding: 1rem 0;
+  text-align: center;
 }
-
-  

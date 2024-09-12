@@ -1,37 +1,33 @@
 // app/layout.tsx
 
-import React from 'react';
-import SearchBar from './components/searchbar'; // Asegúrate de que la ruta es correcta
+import { ReactNode } from 'react';
 import './globals.css'; // Incluye tus estilos globales
 
-export const metadata = {
-  title: 'Mi Aplicación',
-  description: 'Descripción de mi aplicación',
-};
+interface Props {
+  children: ReactNode;
+}
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+export default function RootLayout({ children }: Props) {
   return (
-    <html lang="es"> {/* La etiqueta <html> con el atributo lang */}
+    <html lang="en">
       <body>
         <header>
-          <h1>Mi Aplicación</h1>
-          <SearchBar /> {/* Aquí está la barra de búsqueda */}
+          {/* Aquí puedes agregar tu barra de navegación o cualquier otro contenido global */}
+          <nav>
+            {/* Ejemplo de navegación */}
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+          </nav>
         </header>
-        <main>{children}</main>
-        <footer className="footer">
-          <p>© 2024 Carlos Luque</p>
+        <main>
+          {children}
+        </main>
+        <footer>
+          {/* Aquí puedes agregar el pie de página */}
+          <p>Footer content</p>
         </footer>
       </body>
     </html>
   );
-};
-
-export default RootLayout;
-
-
-
-
-
-
-
+}
 

@@ -1,7 +1,10 @@
+// app/users/page.tsx
+'use client'; // Marca este archivo como un Client Component
+
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
-import styles from './Users.module.css'; // Asegúrate de tener los estilos necesarios
+import styles from './Users.module.css';
 
 interface User {
   id: string;
@@ -19,7 +22,7 @@ const UsersPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('/api/user'); // Ajusta la URL según tu API
+        const response = await axios.get('/api/user');
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -32,7 +35,7 @@ const UsersPage = () => {
   const handleDelete = async (userId: string) => {
     if (confirm(`¿Está seguro que desea eliminar al usuario con ID ${userId}?`)) {
       try {
-        await axios.post(`/api/user/${userId}/delete`); // Ajusta la URL según tu API
+        await axios.delete(`/api/user/${userId}`);
         setUsers(users.filter(user => user.id !== userId));
       } catch (error) {
         console.error('Error deleting user:', error);
@@ -43,7 +46,7 @@ const UsersPage = () => {
   return (
     <div className={styles.mainContent}>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="javascript:void(0);">
+        <a className="navbar-brand" href="#">
           <h4>Recursos Humanos / Lista de Empleados</h4>
         </a>
         <button
@@ -101,10 +104,7 @@ const UsersPage = () => {
                       <td>+57 {user.phone}</td>
                       <td>
                         <span className="email">
-                          <a
-                            href={`mailto:${user.email}`}
-                            title="Enviar correo"
-                          >
+                          <a href={`mailto:${user.email}`} title="Enviar correo">
                             {user.email}
                           </a>
                         </span>
@@ -112,27 +112,16 @@ const UsersPage = () => {
                       <td>
                         <div className="btn-group">
                           <Link href={`/users/${user.id}`}>
-                            <button
-                              className="btn btn-primary btn-sm"
-                              aria-label={`Ver usuario ${user.id}`}
-                            >
+                            <button className="btn btn-primary btn-sm" aria-label={`Ver usuario ${user.id}`}>
                               <i className="fa fa-eye"></i>
                             </button>
                           </Link>
                           <Link href={`/users/edit/${user.id}`}>
-                            <button
-                              className="btn btn-primary btn-sm"
-                              aria-label={`Editar usuario ${user.id}`}
-                            >
+                            <button className="btn btn-primary btn-sm" aria-label={`Editar usuario ${user.id}`}>
                               <i className="fa fa-edit"></i>
                             </button>
                           </Link>
-
-                          <button
-                            onClick={() => handleDelete(user.id)}
-                            className="btn btn-danger btn-sm"
-                            aria-label={`Eliminar usuario ${user.id}`}
-                          >
+                          <button onClick={() => handleDelete(user.id)} className="btn btn-danger btn-sm" aria-label={`Eliminar usuario ${user.id}`}>
                             <i className="fa fa-trash"></i>
                           </button>
                         </div>
@@ -150,4 +139,3 @@ const UsersPage = () => {
 };
 
 export default UsersPage;
-

@@ -1,134 +1,22 @@
-/* app/globals.css */
-
+/* global.css */
 body {
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f7f6;
-  color: #333;
+  background-color: #f0f0f0;
 }
 
 header {
-  background: #2c3e50;
-  color: #ecf0f1;
-  padding: 20px;
-  text-align: center;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-nav {
-  margin: 20px 0;
-}
-
-nav ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-nav ul li {
-  display: inline;
-}
-
-nav ul li a {
-  color: #ecf0f1;
-  text-decoration: none;
-  font-size: 1rem;
-}
-
-nav ul li a:hover {
-  text-decoration: underline;
-}
-
-main {
-  padding: 80px 20px 20px; /* Ajusta el relleno para el encabezado fijo */
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.title {
-  font-size: 2.5rem;
-  color: #2c3e50;
-  margin-bottom: 20px;
+  background-color: #333;
+  color: white;
+  padding: 1rem;
   text-align: center;
 }
 
-.section {
-  margin-bottom: 30px;
-}
-
-.section h2 {
-  font-size: 1.8rem;
-  color: #2c3e50;
-  margin-bottom: 10px;
-}
-
-.section p {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.6;
-}
-
-.button {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 1rem;
-  color: #fff;
-  background-color: #3498db;
-  border: none;
-  border-radius: 4px;
+footer {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
   text-align: center;
-  text-decoration: none;
-  cursor: pointer;
+  margin-top: auto;
 }
-
-.button:hover {
-  background-color: #2980b9;
-}
-
-.footer {
-  background: #2c3e50;
-  color: #ecf0f1;
-  padding: 10px;
-  text-align: center;
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-}
-
-/* Estilos Responsivos */
-@media (max-width: 768px) {
-  header {
-    font-size: 1.5rem;
-  }
-
-  nav ul {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .button {
-    font-size: 0.9rem;
-    padding: 8px 16px;
-  }
-}
-
-

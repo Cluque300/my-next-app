@@ -1,29 +1,49 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
-    "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    "target": "esnext",
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node", // Cambia esto a 'node' si 'bundler' no funciona
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "skipLibCheck": false, // Cambiado a false para verificar tipos en bibliotecas
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "./app/*"
+      ],
+      "@/lib/*": [
+        "./app/lib/*"
+      ],
+      "@/components/*": [
+        "./app/components/*"
+      ]
+    },
+    "forceConsistentCasingInFileNames": true,
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./app/*"],
-      "@/lib/*": ["./app/lib/*"]
-    },
-    "forceConsistentCasingInFileNames": true
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/types/global.d.ts" // Incluye el archivo global.d.ts explícitamente
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
-

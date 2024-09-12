@@ -1,52 +1,64 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma'; // Asegúrate de que esta ruta sea correcta
+import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import fs from 'fs';
-import path from 'path';
 
+// GET: Obtener todos los usuarios
 export async function GET() {
-    const empleados = await prisma.general_users.findMany({
-        where: { estado_usuario: 'Aceptado' },
-    });
-    return NextResponse.json(empleados);
+    try {
+        const usuarios = await prisma.user.findMany();
+        return NextResponse.json(usuarios);
+    } catch (error) {
+        return NextResponse.json({ error: 'Error al obtener los usuarios' }, { status: 500 });
+    }
 }
 
+// POST: Crear un nuevo usuario
 export async function POST(request: Request) {
     const formData = await request.formData();
-    const usuario = formData.get('usuario') as string;
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+    const fullname = formData.get('fullname') as string;
+    const fulllastname = formData.get('fulllastname') as string;
+    const email = formData.get('email') as string;
+    const estadoUsuario = formData.get('estadoUsuario') as string;
+
+    // Validaciones
+    if (!fullname || !fulllastname || !email || !username || typeof password !== 'string' || password === null) {
+        return NextResponse.json({ message: 'Todos los campos son requeridos y la contraseña debe ser una cadena válida' }, { status: 400 });
+    }
+
+    if (password.length < 8) {
+        return NextResponse.json({ message: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 });
+    }
 
     // Verificar si el usuario ya existe
-    const existingUser = await prisma.general_users.findUnique({
-        where: { usuario },
+    const existingUser = await prisma.user.findUnique({
+        where: { username },
     });
-    
+
     if (existingUser) {
         return NextResponse.json({ error: 'El nombre de usuario ya está en uso' }, { status: 400 });
     }
 
-    // Manejar la foto
-    const foto = formData.get('foto') as File;
-    const fileExtension = path.extname(foto.name).toLowerCase();
-    const allowedExtensions = ['.jpg', '.jpeg', '.png'];
-    
-    if (!allowedExtensions.includes(fileExtension)) {
-        return NextResponse.json({ error: 'La extensión de la imagen no está permitida' }, { status: 400 });
+    // Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Crear el nuevo usuario en la base de datos
+    try {
+        await prisma.user.create({
+            data: {
+                username,
+                password: hashedPassword,
+                fullname,
+                fulllastname,
+                email,
+                estadoUsuario, // Incluye aquí el campo `estadoUsuario`
+            },
+        });
+
+        return NextResponse.json({ message: 'Usuario creado con éxito' }, { status: 201 });
+    } catch (error) {
+        console.error('Error al crear el usuario:', error);
+        return NextResponse.json({ error: 'Error al crear el usuario' }, { status: 500 });
     }
-
-    // Guardar la foto
-    const uploadPath = path.join(process.cwd(), 'public', 'images', 'users', `${usuario}Foto${fileExtension}`);
-    fs.writeFileSync(uploadPath, Buffer.from(await foto.arrayBuffer()));
-
-    // Insertar nuevo usuario en la base de datos
-    const hashedPassword = await bcrypt.hash(formData.get('contrasena') as string, 10);
-    await prisma.general_users.create({
-        data: {
-            usuario, // Asegúrate de rellenar todos los campos necesarios
-            foto: `${usuario}Foto${fileExtension}`,
-            contrasena: hashedPassword,
-            // Agrega otros campos necesarios aquí
-        },
-    });
-
-    return NextResponse.redirect('/users/page');
 }

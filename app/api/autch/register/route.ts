@@ -3,44 +3,39 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
-  const { fullname, fulllastname, email, username, password } = await request.json();
-
   try {
-    // Validaciones
-    if (!fullname || !fulllastname || !email || !username || typeof password !== 'string' || password === null) {
+    const data = await request.json();
+    console.log('Datos recibidos:', data);
+
+    const { fullname, fulllastname, email, username, password, estadoUsuario } = data;
+
+    if (!fullname || !fulllastname || !email || !username || typeof password !== 'string' || password.trim() === '') {
+      console.log('Error en validaciones');
       return NextResponse.json({ message: 'Todos los campos son requeridos y la contraseña debe ser una cadena válida' }, { status: 400 });
     }
 
     if (password.length < 8) {
+      console.log('Error: Contraseña corta');
       return NextResponse.json({ message: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 });
     }
 
-    // Verifica si el usuario ya existe
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [
-          { email: email },
-          { username: username }
+          { email },
+          { username }
         ]
       }
     });
 
     if (existingUser) {
+      console.log('Usuario ya existe');
       return NextResponse.json({ message: 'El nombre de usuario o correo electrónico ya está en uso' }, { status: 400 });
     }
 
-    // Hash de la contraseña
-    const hashedPassword = await new Promise<string>((resolve, reject) => {
-      bcrypt.hash(password, 10, (err, hash) => {
-        if (err || hash === null) {
-          reject(new Error('Error al generar el hash de la contraseña'));
-        } else {
-          resolve(hash);
-        }
-      });
-    });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('Contraseña hasheada:', hashedPassword);
 
-    // Inserta el nuevo usuario en la base de datos
     await prisma.user.create({
       data: {
         fullname,
@@ -48,10 +43,12 @@ export async function POST(request: Request) {
         email,
         username,
         password: hashedPassword,
+        estadoUsuario,
       },
     });
 
-    return NextResponse.json({ message: 'Registro completado con éxito' });
+    console.log('Registro completado con éxito');
+    return NextResponse.json({ message: 'Registro completado con éxito' }, { status: 201 });
   } catch (error) {
     console.error('Error del servidor:', error);
     return NextResponse.json({ message: 'Error del servidor' }, { status: 500 });

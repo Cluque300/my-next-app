@@ -1,26 +1,25 @@
 // /app/users/[id]/page.tsx
 
-import { useRouter } from 'next/router';
+'use client';
+
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface User {
-  // Define the structure of the user data based on your requirements
-  [key: number]: string | number;
+  [key: string]: string | number;
 }
 
 const UserProfile = () => {
-  const router = useRouter();
-  const { id } = router.query;
+  const { id } = useParams();  // Usa useParams para obtener el ID
   const [userData, setUserData] = useState<User | null>(null);
-  const [message, setMessage] = useState<{ type: string, text: string } | null>(null);
+  const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
 
   useEffect(() => {
     if (id) {
-      // Fetch user data based on the ID
-      fetch(`/api/user/${id}`)
-        .then(response => response.json())
-        .then(data => setUserData(data))
-        .catch(error => setMessage({ type: 'error', text: 'Error fetching user data' }));
+      fetch(`/api/autch/user/${id}`)
+        .then((response) => response.json())
+        .then((data) => setUserData(data))
+        .catch((error) => setMessage({ type: 'error', text: 'Error fetching user data' }));
     }
   }, [id]);
 
@@ -41,7 +40,7 @@ const UserProfile = () => {
               </button>
             </div>
           )}
-          <h1 className="text-center">Información de Usuarios</h1>
+          <h1 className="text-center">Información de Usuario</h1>
           <div className="circle-image">
             <img src={`/images/users/${userData[23]}`} alt="Imagen de perfil" />
           </div>
@@ -91,7 +90,7 @@ const UserProfile = () => {
                             <li><strong>Profesión:</strong> {userData[17]}</li>
                             <li><strong>Institución Pregrado:</strong> {userData[19]}</li>
                             <li><strong>Posgrado:</strong> {userData[20]}</li>
-                            <li><strong>Intitucion Posgrado:</strong> {userData[33]}</li>
+                            <li><strong>Institución Posgrado:</strong> {userData[33]}</li>
                             <li><strong>Cargo:</strong> {userData[42]}</li>
                             <li><strong>Departamento:</strong> {userData[36]}</li>
                             <li><strong>Habilidades:</strong> {userData[16]}</li>
@@ -135,7 +134,7 @@ const UserProfile = () => {
                       </div>
                     </div>
                   </div>
-                  <a href={`/editEmpleados/${userData[26]}`}>
+                  <a href={`/users/${userData.id}/edit`}>
                     <button className="btn btn-primary">Editar Información</button>
                   </a>
                 </div>
@@ -149,3 +148,5 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+
+

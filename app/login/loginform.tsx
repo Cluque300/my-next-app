@@ -1,16 +1,20 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import styles from './login.module.css';
 
 export default function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null); // Manejo de errores
+  const router = useRouter(); // Hook de redirección
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Limpiar errores al enviar
 
-    const response = await fetch('/api/login', {
+    const response = await fetch('/api/autch/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -20,20 +24,21 @@ export default function LoginForm() {
 
     if (response.ok) {
       const data = await response.json();
-      window.location.href = data.redirectUrl; // Redirige al usuario a la URL especificada en la respuesta
+      router.push(data.redirectUrl); // Redirigir usando useRouter
     } else {
       const error = await response.json();
-      alert(error.message); // O manejar el error de otra manera
+      setError(error.message); // Mostrar error en el formulario
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className={styles.formAuthSmall}>
+      {error && <div className={styles.error}>{error}</div>} {/* Mostrar error */}
       <div className={styles.inputGroup}>
         <label htmlFor="username" className={styles.label}>Nombre de usuario</label>
-        <input 
-          type="text" 
-          id="username" 
+        <input
+          type="text"
+          id="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className={styles.input}
@@ -42,9 +47,9 @@ export default function LoginForm() {
       </div>
       <div className={styles.inputGroup}>
         <label htmlFor="password" className={styles.label}>Contraseña</label>
-        <input 
-          type="password" 
-          id="password" 
+        <input
+          type="password"
+          id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className={styles.input}
@@ -61,8 +66,6 @@ export default function LoginForm() {
     </form>
   );
 }
-
-
 
 
 

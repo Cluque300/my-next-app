@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:generate": "prisma generate --schema=app/prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev --schema=app/prisma/schema.prisma",
+    "prisma:db-push": "prisma db push --schema=app/prisma/schema.prisma",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
