@@ -3,8 +3,8 @@
 .searchBar {
   display: flex;
   align-items: center;
-  max-width: 600px;
-  margin: 0 auto; /* Opcional: Centra la barra de búsqueda */
+  max-width: 600px; /* Ajusta el ancho máximo según el diseño */
+  margin: 0 auto; /* Centra la barra de búsqueda */
 }
 
 .input {

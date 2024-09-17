@@ -91,7 +91,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         await prisma.user.delete({
             where: { id: Number(id) },
         });
-        return NextResponse.redirect('/users');
+        return NextResponse.redirect('/admin/users');
     } catch (error) {
         return NextResponse.json({ error: 'Error al eliminar el usuario' }, { status: 500 });
     }

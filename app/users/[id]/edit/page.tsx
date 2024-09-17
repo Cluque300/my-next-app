@@ -157,7 +157,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userData = {} }) => {
         }
       }
 
-      const response = await fetch(`/api/user/${userData.id}`, {
+      const response = await fetch(`/api/autch/user/${userData.id}`, {
         method: 'PATCH',
         body: formDataToSend
       });

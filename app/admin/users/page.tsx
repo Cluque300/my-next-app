@@ -22,7 +22,7 @@ const UsersPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('/api/user');
+        const response = await axios.get('/api/autch/user');
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -35,7 +35,7 @@ const UsersPage = () => {
   const handleDelete = async (userId: string) => {
     if (confirm(`¿Está seguro que desea eliminar al usuario con ID ${userId}?`)) {
       try {
-        await axios.delete(`/api/user/${userId}`);
+        await axios.delete(`/api/autch/user/${userId}`);
         setUsers(users.filter(user => user.id !== userId));
       } catch (error) {
         console.error('Error deleting user:', error);
@@ -62,7 +62,7 @@ const UsersPage = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto"></ul>
-          <Link href="/users/create">
+          <Link href="/admin/users/create">
             <button className="btn btn-primary">Añadir Usuario</button>
           </Link>
         </div>
@@ -111,12 +111,12 @@ const UsersPage = () => {
                       </td>
                       <td>
                         <div className="btn-group">
-                          <Link href={`/users/${user.id}`}>
+                          <Link href={`/admin/users/${user.id}`}>
                             <button className="btn btn-primary btn-sm" aria-label={`Ver usuario ${user.id}`}>
                               <i className="fa fa-eye"></i>
                             </button>
                           </Link>
-                          <Link href={`/users/edit/${user.id}`}>
+                          <Link href={`/admin/users/edit/${user.id}`}>
                             <button className="btn btn-primary btn-sm" aria-label={`Editar usuario ${user.id}`}>
                               <i className="fa fa-edit"></i>
                             </button>

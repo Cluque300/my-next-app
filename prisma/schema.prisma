@@ -20,7 +20,11 @@ model User {
   updatedAt   DateTime @updatedAt
   foto        String?  // Añadido el campo `foto`
   estadoUsuario String?
+   role      Role     @default(USER)  // Campo para rol de usuario
 }
-
+enum Role {
+  USER
+  ADMIN
+}
 
 

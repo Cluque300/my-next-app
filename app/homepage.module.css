@@ -1,17 +1,150 @@
 /* homepage.module.css */
+/* Contenedor principal */
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   padding: 0 2rem;
+  color: white;
+  background: url('/images/background1.jpg') no-repeat center center/cover; /* Imagen de fondo inicial */
+  background-size: cover;
+  background-attachment: fixed; /* Fondo fijo para efecto de parallax */
+  z-index: 1; /* Asegura que el contenido esté por encima del overlay */
+  animation: backgroundTransition 20s infinite; /* Animación de transición de fondo */
 }
 
+/* Definir la animación para la transición entre fondos */
+@keyframes backgroundTransition {
+  0% {
+    background: url('/images/background1.jpg') no-repeat center center/cover;
+  }
+  50% {
+    background: url('/images/background2.jpg') no-repeat center center/cover;
+  }
+  100% {
+    background: url('/images/background1.jpg') no-repeat center center/cover;
+  }
+}
+
+/* Estilo del header */
 .header {
-  background: #f8f9fa;
   padding: 1rem 0;
-  text-align: center;
+  background: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra */
+  border-bottom: 2px solid #003366; /* Borde inferior */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Contenido del header */
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.logo {
+  width: 100px; /* Ajusta el tamaño según tus necesidades */
+  height: auto;
+  margin-bottom: 0.5rem;
+  filter: contrast(500%); /* Aumentar el contraste del logo */
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #ffffff;
+  font-family: 'Arial', sans-serif; /* Tipografía más moderna */
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 1rem; /* Espacio entre los elementos */
+}
+
+/* Estilos para el menú desplegable */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: #003366;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease; /* Efecto de transición */
+}
+
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.dropdownContent a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.3s ease; /* Efecto de transición */
+}
+
+.dropdownContent a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdownContent {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #00509e;
+}
+
+/* Contenedor para la barra de búsqueda */
+.searchContainer {
+  display: flex;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+/* Botones de autenticación */
+.authButtons {
+  display: flex;
+  gap: 0.5rem; /* Espacio entre los botones */
+}
+
+.authButton {
+  background-color: #003366;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease; /* Efecto de transición */
+}
+
+.authButton:hover {
+  background-color: #00509e; /* Color de hover */
+}
+
+/* Contenido principal */
 .mainContent {
   flex: 1;
   display: flex;
@@ -19,33 +152,25 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  color: white;
 }
 
-.title {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.description {
-  margin-bottom: 1rem;
-}
-
-.navList {
-  list-style: none;
-  padding: 0;
-}
-
-.navList li {
-  margin: 0.5rem 0;
-}
-
-.navList a {
-  text-decoration: none;
-  color: #0070f3;
-}
-
+/* Estilo del pie de página */
 .footer {
-  background: #f8f9fa;
+  background: rgba(0, 0, 0, 0.6);
   padding: 1rem 0;
   text-align: center;
+  color: white;
 }
+
+.footerLogo {
+  width: 80px; /* Ajusta el tamaño según tus necesidades */
+  height: auto;
+  margin-top: 1rem; /* Espacio entre el texto y la imagen */
+  filter: contrast(500%); /* Aumentar el contraste del logo */
+}
+
+
+
+
+
