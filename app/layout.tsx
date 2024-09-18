@@ -16,28 +16,34 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
       <body>
-        {!isHomePage && (
-          <header>
-            {/* Aquí puedes agregar tu barra de navegación o cualquier otro contenido global */}
-            <nav>
-              {/* Ejemplo de navegación */}
-              <a href="/">Home</a>
-              <a href="/about">About</a>
-            </nav>
-          </header>
-        )}
-        <main>
-          {children}
-        </main>
-        {!isHomePage && (
-          <footer>
-            {/* Aquí puedes agregar el pie de página */}
-            <p>Footer content</p>
-          </footer>
-        )}
+        <div className="layout-container">
+          {!isHomePage && (
+            <header className="header">
+              <nav className="nav">
+                <div className="logo">
+                  <a href="/">
+                    <img src="/images/isotipohb.svg" alt="Logo" className="logo-image" />
+                  </a>
+                </div>
+                <ul className="nav-links">
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/about">About</a></li>
+                  <li><a href="/users">Users</a></li>
+                </ul>
+              </nav>
+            </header>
+          )}
+          <main className="main-content">
+            {children}
+          </main>
+          {!isHomePage && (
+            <footer className="footer">
+              <p>&copy; {new Date().getFullYear()} MyApp. All rights reserved.</p>
+            </footer>
+          )}
+        </div>
       </body>
     </html>
   );
 }
-
 

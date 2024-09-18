@@ -1,4 +1,3 @@
-// app/users/page.tsx
 'use client'; // Marca este archivo como un Client Component
 
 import { useEffect, useState } from 'react';
@@ -116,7 +115,7 @@ const UsersPage = () => {
                               <i className="fa fa-eye"></i>
                             </button>
                           </Link>
-                          <Link href={`/admin/users/edit/${user.id}`}>
+                          <Link href={`/admin/users/${user.id}/edit`}>
                             <button className="btn btn-primary btn-sm" aria-label={`Editar usuario ${user.id}`}>
                               <i className="fa fa-edit"></i>
                             </button>
@@ -139,3 +138,4 @@ const UsersPage = () => {
 };
 
 export default UsersPage;
+

@@ -24,7 +24,11 @@ export default function LoginForm() {
 
     if (response.ok) {
       const data = await response.json();
-      router.push(data.redirectUrl); // Redirigir usando useRouter
+      if (data.redirectUrl) {
+        router.push(data.redirectUrl); // Redirigir usando useRouter
+      } else {
+        setError('Error desconocido'); // Manejo de errores si no se recibe redirectUrl
+      }
     } else {
       const error = await response.json();
       setError(error.message); // Mostrar error en el formulario
@@ -66,6 +70,7 @@ export default function LoginForm() {
     </form>
   );
 }
+
 
 
 

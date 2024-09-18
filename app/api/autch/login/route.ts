@@ -3,7 +3,7 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma'; // Asegúrate de que esta ruta es correcta
-import { User } from '@prisma/client'; // Importa el tipo User
+import { User, Role } from '@prisma/client'; // Importa el tipo User y Role
 
 export async function POST(request: Request) {
   try {
@@ -27,8 +27,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Credenciales incorrectas' }, { status: 401 });
     }
 
-    // Respuesta exitosa y configuración de cookies
-    const response = NextResponse.json({ redirectUrl: `/users/${user.id}` });
+    // Determina la URL de redirección basado en el rol del usuario
+    const redirectUrl: string = user.role === Role.ADMIN ? `/admin` : `/users/${user.id}`;
+    const response = NextResponse.json({ redirectUrl });
 
     // Configuración de cookies
     response.cookies.set('user', JSON.stringify(user), {
@@ -42,3 +43,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Error del servidor' }, { status: 500 });
   }
 }
+
