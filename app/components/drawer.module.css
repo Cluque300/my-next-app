@@ -1,0 +1,59 @@
+.drawerContainer {
+  display: flex;
+  height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+}
+
+.drawerNav {
+  width: 240px; /* Ancho del drawer */
+  flex-shrink: 0;
+}
+
+.mobileDrawer {
+  z-index: 1201; /* Asegura que el drawer móvil esté por encima de otros elementos */
+}
+
+.desktopDrawer {
+  width: 240px; /* Ancho del drawer en desktop */
+  flex-shrink: 0;
+}
+
+.mainContent {
+  flex-grow: 1; /* Permite que el contenido principal ocupe el espacio restante */
+  padding: 16px; /* Espaciado alrededor del contenido */
+  transition: margin-left 0.3s ease; /* Transición suave para el contenido cuando se abre/cierra el drawer */
+}
+
+.userSection {
+  padding: 16px; /* Espaciado para la sección del usuario */
+  text-align: center; /* Centra el texto */
+}
+
+.profileImage {
+  width: 60px; /* Ancho de la imagen de perfil */
+  height: 60px; /* Altura de la imagen de perfil */
+  border-radius: 50%; /* Hace que la imagen sea circular */
+  margin-bottom: 8px; /* Espaciado debajo de la imagen */
+}
+
+.userName {
+  font-weight: bold; /* Negrita para el nombre del usuario */
+}
+
+.userRole {
+  font-size: 0.9rem; /* Tamaño de fuente más pequeño para el rol */
+  color: gray; /* Color gris para el rol */
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center; /* Centra los iconos */
+  margin-top: 8px; /* Espaciado superior */
+}
+
+.menuButton {
+  margin-right: 36px; /* Espaciado a la derecha para el botón de menú */
+}
+
+.appBar {
+  z-index: 1200; /* Asegura que la barra de aplicación esté por encima del drawer */
+}

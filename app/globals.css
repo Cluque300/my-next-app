@@ -21,7 +21,7 @@ body {
 }
 
 .header {
-  background-color: #007bff;
+  background-color: #001F3F;
   color: white;
   padding: 0.75rem 1.5rem; /* Padding ajustado para el header */
   height: 73.5px; /* Altura del header ajustada a un 5% más grande */
@@ -69,14 +69,6 @@ body {
   padding: 2rem;
 }
 
-.footer {
-  background-color: #007bff;
-  color: white;
-  text-align: center;
-  padding: 1rem 1.5rem; /* Padding ajustado para el footer */
-  margin-top: auto;
-}
-
 /* Responsivo */
 @media (max-width: 768px) {
   .nav-links {
@@ -88,5 +80,3 @@ body {
     flex-direction: column;
   }
 }
-
-

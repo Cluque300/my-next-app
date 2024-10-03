@@ -1,27 +1,32 @@
 // app/context/AuthContext.tsx
 
-"use client"; // Asegúrate de que este archivo sea un componente del cliente
+"use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { cookies } from 'next/headers'; // Importar para acceder a las cookies en el servidor
 
 interface AuthContextType {
-  isLoggedIn: boolean; // Cambiado de isAuthenticated a isLoggedIn
+  isLoggedIn: boolean | null;
   login: (username: string, password: string) => Promise<void>;
-  logout: () => Promise<void>; // Cambiado a Promise<void>
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Verificar si hay una sesión activa a través de cookies
-    const cookie = document.cookie.split('; ').find(row => row.startsWith('user='));
-    if (cookie) {
-      setIsLoggedIn(true); // Establecer estado a true si la cookie existe
-    }
+    const checkUserSession = async () => {
+      try {
+        const response = await fetch('/api/autch/check-session');
+        const data = await response.json();
+        setIsLoggedIn(data.isLoggedIn);
+      } catch (error) {
+        console.error('Error verificando la sesión:', error);
+        setIsLoggedIn(false);
+      }
+    };
+    checkUserSession();
   }, []);
 
   const login = async (username: string, password: string) => {
@@ -35,8 +40,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (response.ok) {
       const data = await response.json();
-      document.cookie = `user=${data.token}; path=/`; // Almacena la cookie de sesión
+      document.cookie = `user=${data.token}; path=/`;
       setIsLoggedIn(true);
+      window.location.href = data.redirectUrl; // Redirige a la URL devuelta
     } else {
       throw new Error('Login failed');
     }
@@ -48,8 +54,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (response.ok) {
-      setIsLoggedIn(false); // Cambia el estado a false
-      document.cookie = "user=; max-age=0; path=/"; // Elimina la cookie
+      document.cookie = 'user=; max-age=0; path=/';
+      setIsLoggedIn(false);
     } else {
       console.error('Error al cerrar sesión');
     }
