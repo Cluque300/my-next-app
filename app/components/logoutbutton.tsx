@@ -12,6 +12,7 @@ export default function LogoutButton() {
     try {
       await logout(); // Llama a la función logout del contexto
       router.push('/login'); // Redirige a la página de inicio de sesión
+      router.refresh();
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }

@@ -3,8 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import styles from './login.module.css';
+import { useAuth } from '../context/AuthContext'; // Importamos el contexto de autenticación
 
 export default function LoginForm() {
+  const { login } = useAuth(); // Usamos el hook para acceder a la función login
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null); // Manejo de errores
@@ -14,24 +16,11 @@ export default function LoginForm() {
     e.preventDefault();
     setError(null); // Limpiar errores al enviar
 
-    const response = await fetch('/api/autch/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data.redirectUrl) {
-        router.push(data.redirectUrl); // Redirigir usando useRouter
-      } else {
-        setError('Error desconocido'); // Manejo de errores si no se recibe redirectUrl
-      }
-    } else {
-      const error = await response.json();
-      setError(error.message); // Mostrar error en el formulario
+    try {
+      await login(username, password); // Llamamos a la función login del contexto
+      // La redirección se maneja dentro del login, no necesitamos hacerlo aquí
+    } catch (error) {
+      setError('Error al iniciar sesión'); // Mostrar error en el formulario
     }
   };
 
@@ -70,7 +59,6 @@ export default function LoginForm() {
     </form>
   );
 }
-
 
 
 

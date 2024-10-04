@@ -1,0 +1,57 @@
+/* app/components/header.module.css */
+.header {
+    background-color: #001F3F;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    height: 73.5px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .logo a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  
+  .logoImage {
+    width: 85px; /* Asegura que el tamaño del logo sea correcto */
+    height: auto;
+    filter: invert(100%);
+  }
+  
+  .navLinks {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .navLinks a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  
+  .navLinks a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsivo */
+  @media (max-width: 768px) {
+    .navLinks {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .nav {
+      flex-direction: column;
+    }
+  }
+  

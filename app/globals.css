@@ -20,63 +20,14 @@ body {
   min-height: 100vh;
 }
 
-.header {
-  background-color: #001F3F;
-  color: white;
-  padding: 0.75rem 1.5rem; /* Padding ajustado para el header */
-  height: 73.5px; /* Altura del header ajustada a un 5% más grande */
-  display: flex;
-  align-items: center;
-}
-
-.nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.logo a {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-.logo img {
-  width: 85px; /* Tamaño del logo ajustado a un 5% más pequeño adicionalmente */
-  height: auto;
-  filter: invert(100%);
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem; /* Espacio entre enlaces */
-}
-
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  font-size: 1rem; /* Tamaño de fuente adecuado */
-}
-
-.nav-links a:hover {
-  text-decoration: underline;
-}
-
 .main-content {
   flex-grow: 1;
   padding: 2rem;
 }
 
-/* Responsivo */
+/* Estilos responsivos globales */
 @media (max-width: 768px) {
-  .nav-links {
-    flex-direction: column;
-    gap: 1rem; /* Espacio entre enlaces en móvil */
-  }
-
-  .nav {
-    flex-direction: column;
+  .main-content {
+    padding: 1rem;
   }
 }
