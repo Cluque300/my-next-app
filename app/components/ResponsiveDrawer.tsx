@@ -31,6 +31,8 @@ import { SiSlack } from 'react-icons/si';
 import { FaTrello, FaRegEnvelope, FaRegCalendarAlt, FaGithub } from 'react-icons/fa';
 
 import styles from './drawer.module.css'; // Importar el módulo CSS
+import { useAuth } from '../context/AuthContext'; // Ajusta la ruta según tu estructura de carpetas
+import { useRouter } from 'next/navigation';
 
 const drawerWidth = 240;
 
@@ -44,6 +46,10 @@ export default function ResponsiveDrawer(props: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
+  // Obtener el userId y el estado de login del contexto
+  const { userId, isLoggedIn } = useAuth();
+  const router = useRouter(); // Inicializamos el hook useRouter para la navegación
+
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
@@ -56,6 +62,12 @@ export default function ResponsiveDrawer(props: Props) {
   const handleDrawerToggle = () => {
     if (!isClosing) {
       setMobileOpen(!mobileOpen);
+    }
+  };
+
+  const handleProfileRedirect = () => {
+    if (userId) {
+      router.push(`/users/${userId}`); // Redirigir a la página de perfil del usuario
     }
   };
 
@@ -134,7 +146,7 @@ export default function ResponsiveDrawer(props: Props) {
         <ListItem>
           <ListItemText primary="Usuarios" />
         </ListItem>
-        <ListItemButton>
+        <ListItemButton onClick={handleProfileRedirect}>
           <ListItemIcon><AccountCircleIcon /></ListItemIcon>
           <ListItemText primary="Mi Perfil" />
         </ListItemButton>

@@ -3,85 +3,83 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Importa el hook useRouter
+import { useRouter } from 'next/navigation';
 
-// Definimos la interfaz para el tipo del contexto de autenticación
 interface AuthContextType {
   isLoggedIn: boolean | null;
+  userId: number | null; // Cambiado a number para reflejar el tipo de la base de datos
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
-// Creamos el contexto de autenticación
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Creamos el componente proveedor que envolverá la aplicación
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-  const router = useRouter(); // Inicializamos el hook useRouter para la navegación
+  const [userId, setUserId] = useState<number | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    // Función que chequea si hay una sesión de usuario activa al cargar la app
     const checkUserSession = async () => {
       try {
-        const response = await fetch('/api/autch/check-session'); // Revisa la sesión
+        const response = await fetch('/api/autch/check-session');
         const data = await response.json();
-        setIsLoggedIn(data.isLoggedIn); // Actualiza el estado según la respuesta
+        setIsLoggedIn(data.isLoggedIn);
+        setUserId(data.userId !== undefined ? data.userId : null);
       } catch (error) {
         console.error('Error verificando la sesión:', error);
-        setIsLoggedIn(false); // En caso de error, se asume que no está autenticado
+        setIsLoggedIn(false);
+        setUserId(null);
       }
     };
-    checkUserSession(); // Se ejecuta al montar el componente
+    checkUserSession();
   }, []);
 
-  // Función para iniciar sesión
   const login = async (username: string, password: string) => {
     const response = await fetch('/api/autch/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password }), // Enviamos las credenciales
+      body: JSON.stringify({ username, password }),
     });
 
     if (response.ok) {
-      const data = await response.json(); // Obtenemos la respuesta del servidor
-      setIsLoggedIn(true); // Actualizamos el estado de autenticación
-      router.push(data.redirectUrl); // Redirigimos a la URL obtenida
+      const data = await response.json();
+      setIsLoggedIn(true);
+      setUserId(data.userId); // Se establece como number
+      router.push(data.redirectUrl);
     } else {
-      throw new Error('Login failed'); // Si el login falla, lanzamos un error
+      throw new Error('Login failed');
     }
   };
 
-  // Función para cerrar sesión
   const logout = async () => {
     const response = await fetch('/api/autch/logout', {
       method: 'POST',
     });
 
     if (response.ok) {
-      document.cookie = 'user=; max-age=0; path=/'; // Limpiamos las cookies de usuario
-      setIsLoggedIn(false); // Actualizamos el estado de autenticación
-      router.push('/login'); // Redirigimos a la página de login
+      document.cookie = 'user=; max-age=0; path=/';
+      setIsLoggedIn(false);
+      setUserId(null);
+      router.push('/login');
     } else {
-      console.error('Error al cerrar sesión'); // Si falla el logout, mostramos un error
+      console.error('Error al cerrar sesión');
     }
   };
 
-  // Renderizamos el proveedor del contexto con el estado y las funciones
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
-      {children} {/* Renderizamos los hijos dentro del proveedor */}
+    <AuthContext.Provider value={{ isLoggedIn, userId, login, logout }}>
+      {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook personalizado para utilizar el contexto de autenticación en cualquier componente
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider'); // Si no estamos dentro del proveedor, lanzamos un error
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
