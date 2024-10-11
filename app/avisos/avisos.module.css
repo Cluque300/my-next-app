@@ -1,0 +1,27 @@
+/* app/avisos/avisos.module.css */
+.container {
+    padding: 20px;
+  }
+  
+  .avisosContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .avisoCard {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  .description {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .date {
+    font-size: 14px;
+    color: #666;
+  }
+  

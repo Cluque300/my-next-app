@@ -22,6 +22,9 @@ model User {
 
   // Relación con el modelo Aviso
   avisos       Aviso[]   // Un usuario puede tener múltiples avisos
+
+  // Relación con Inventario
+  inventario   Inventario[] // Un usuario puede agregar múltiples elementos al inventario
 }
 
 model Aviso {
@@ -33,8 +36,24 @@ model Aviso {
   userId       Int       // Foreign key a User
 }
 
+model Inventario {
+  id_elemento    String    @id // Usamos String como ID único
+  nombre_elemento String   // Nombre del elemento
+  descripcion    String    // Descripción del elemento
+  cantidad       Int       // Cantidad disponible
+  ubicacion      String    // Ubicación del elemento
+  tipo_elemento  String    // Tipo del elemento (Ej. equipo, herramienta, etc.)
+  imagen         String?   // URL o ruta de la imagen del elemento
+  categoria      String    // Categoría del elemento
+  createdAt      DateTime  @default(now()) // Fecha de creación
+  updatedAt      DateTime  @updatedAt      // Fecha de última actualización
+
+  // Relación con User (Opcional, en caso de que un usuario pueda tener control sobre los elementos)
+  user           User?     @relation(fields: [userId], references: [id])
+  userId         Int?      // Relación opcional con usuario (nullable)
+}
+
 enum Role {
   USER
   ADMIN
 }
-
