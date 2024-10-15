@@ -71,6 +71,14 @@ export default function ResponsiveDrawer(props: Props) {
     }
   };
 
+  const handleAvisosRedirect = () => {
+    router.push('/avisos'); // Redirigir a la página de Avisos
+  };
+
+  const handleCalendarioRedirect = () => {
+    router.push('/calendario'); // Redirigir a la página de Mi Calendario
+  };
+
   const drawer = (
     <div>
       {/* Sección de usuario */}
@@ -104,7 +112,7 @@ export default function ResponsiveDrawer(props: Props) {
           <ListItemIcon><NotificationsIcon /></ListItemIcon>
           <ListItemText primary="Mi Cartelera" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton onClick={handleAvisosRedirect}>
           <ListItemIcon><AnnouncementIcon /></ListItemIcon>
           <ListItemText primary="Avisos" />
         </ListItemButton>
@@ -123,7 +131,7 @@ export default function ResponsiveDrawer(props: Props) {
         <ListItem>
           <ListItemText primary="Aplicaciones" />
         </ListItem>
-        <ListItemButton>
+        <ListItemButton onClick={handleCalendarioRedirect}>
           <ListItemIcon><EventIcon /></ListItemIcon>
           <ListItemText primary="Mi Calendario" />
         </ListItemButton>

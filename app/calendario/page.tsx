@@ -1,60 +1,36 @@
 // app/calendario/page.tsx
-"use client";
+'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button, Container, Typography, Box } from '@mui/material';
-import Calendar from 'react-calendar'; // Solo importa Calendar
-import 'react-calendar/dist/Calendar.css';
+import { Box, Button } from '@mui/material';
+import { useRouter } from 'next/navigation'; // Importa el hook useRouter para redirecciones
+import StyledCalendar from '../components/StyledCalendar'; // Importa desde el lugar correcto
 
-// Ajustamos el tipo del estado
-const CalendarioPage = () => {
-  const router = useRouter();
-  const [date, setDate] = useState<Date | Date[] | null>(null); // Estado para el calendario
-
-  const handleVacacionesClick = () => {
-    router.push('/vacaciones');
-  };
-
-  const handlePermisosClick = () => {
-    router.push('/permisos');
-  };
-
-  // Función para manejar el cambio de fecha
-  const handleDateChange = (newDate: Date | Date[] | null) => {
-    setDate(newDate);
-  };
+const CalendarPage = () => {
+  const router = useRouter(); // Usa el hook useRouter para la redirección
 
   return (
-    <Container>
-      <Typography variant="h4" align="center" gutterBottom>
-        Calendario
-      </Typography>
-      <Box display="flex" justifyContent="flex-end" mb={2}>
+    <Box sx={{ padding: 2, position: 'relative' }}>
+      <h1>Calendario</h1>
+      <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
         <Button 
           variant="contained" 
           color="primary" 
-          onClick={handleVacacionesClick} 
-          sx={{ marginRight: 1 }}
+          onClick={() => router.push('/vacaciones')} // Redirección a vacaciones
+          sx={{ marginRight: 1 }} // Espaciado entre los botones
         >
           Vacaciones
         </Button>
         <Button 
           variant="contained" 
           color="secondary" 
-          onClick={handlePermisosClick}
+          onClick={() => router.push('/permisos')} // Redirección a permisos
         >
           Permisos
         </Button>
       </Box>
-      <Box display="flex" justifyContent="center">
-        <Calendar
-          onChange={(newDate) => handleDateChange(newDate)} // Usar función directamente
-          value={date} // Este es el valor actual del calendario
-        />
-      </Box>
-    </Container>
+      <StyledCalendar /> {/* Usa el componente StyledCalendar aquí */}
+    </Box>
   );
 };
 
-export default CalendarioPage;
+export default CalendarPage;
