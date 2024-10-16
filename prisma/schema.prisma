@@ -1,5 +1,5 @@
 datasource db {
-  provider = "mysql"  // Cambia el proveedor según tu base de datos
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -8,26 +8,29 @@ generator client {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  fullname     String
-  fulllastname String
-  email        String    @unique
-  username     String    @unique
-  password     String
-  foto         String?   // Campo opcional para foto
-  estadoUsuario String?  // Estado opcional
-  role         Role      @default(USER)  // Rol del usuario
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id             Int             @id @default(autoincrement())
+  fullname       String
+  fulllastname   String
+  email          String          @unique
+  username       String          @unique
+  password       String
+  foto           String?         // Campo opcional para foto
+  estadoUsuario  String?         // Estado opcional del usuario
+  role           Role            @default(USER)  // Rol del usuario
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
-  // Relación con el modelo Aviso
-  avisos       Aviso[]   // Un usuario puede tener múltiples avisos
+  // Relación con Aviso
+  avisos         Aviso[]         // Un usuario puede tener múltiples avisos
 
   // Relación con Inventario
-  inventario   Inventario[] // Un usuario puede agregar múltiples elementos al inventario
-  
+  inventario     Inventario[]    // Un usuario puede agregar múltiples elementos al inventario
+
   // Relación con CalendarEvent
   calendarEvents CalendarEvent[] // Un usuario puede tener múltiples eventos de calendario
+
+  // Relación con ProjectUser (tabla intermedia)
+  projectUsers   ProjectUser[]   // Un usuario puede estar en múltiples proyectos
 }
 
 model Aviso {
@@ -51,7 +54,7 @@ model Inventario {
   createdAt      DateTime  @default(now()) // Fecha de creación
   updatedAt      DateTime  @updatedAt      // Fecha de última actualización
 
-  // Relación con User (Opcional, en caso de que un usuario pueda tener control sobre los elementos)
+  // Relación con User (Opcional)
   user           User?     @relation(fields: [userId], references: [id])
   userId         Int?      // Relación opcional con usuario (nullable)
 }
@@ -61,11 +64,41 @@ model CalendarEvent {
   title       String    // Título del evento
   start       DateTime  // Fecha y hora de inicio
   end         DateTime  // Fecha y hora de finalización
-  description String?    // Descripción del evento (opcional)
+  description String?   // Descripción del evento (opcional)
   user        User      @relation(fields: [userId], references: [id]) // Relación con User
   userId      Int       // Foreign key a User
   createdAt   DateTime  @default(now()) // Fecha de creación
   updatedAt   DateTime  @updatedAt      // Fecha de última actualización
+}
+
+model Project {
+  id                Int             @id @default(autoincrement())
+  nombre_proyecto   String          // Nombre del proyecto
+  imagen_proyecto   String?         // Campo opcional para la imagen del proyecto
+  descripcion       String          // Descripción del proyecto
+  createdAt         DateTime        @default(now()) // Fecha de creación
+  updatedAt         DateTime        @updatedAt      // Fecha de última actualización
+
+  // Relación con ProjectUser
+  projectUsers      ProjectUser[]   // Un proyecto puede tener múltiples usuarios
+}
+
+model ProjectUser {
+  id                 Int       @id @default(autoincrement())
+  userId             Int       // Foreign key a User
+  projectId          Int       // Foreign key a Project
+  fecha_inicio_user  DateTime  // Fecha de inicio de participación del usuario
+  fecha_fin_user     DateTime? // Fecha de finalización de participación del usuario (opcional)
+  observaciones      String?   // Campo opcional para observaciones
+  estado_usuario     String    // Estado del usuario en el proyecto (Ej: Activo o Inactivo)
+
+  // Relación con User
+  user     User     @relation(fields: [userId], references: [id])
+  
+  // Relación con Project
+  project  Project  @relation(fields: [projectId], references: [id])
+
+  @@unique([userId, projectId])  // Asegura que no haya duplicados para un usuario en un proyecto
 }
 
 enum Role {
