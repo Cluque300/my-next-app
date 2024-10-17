@@ -31,6 +31,15 @@ model User {
 
   // Relación con ProjectUser (tabla intermedia)
   projectUsers   ProjectUser[]   // Un usuario puede estar en múltiples proyectos
+
+  // Relación con Vacaciones
+  vacaciones     Vacaciones[]    // Relación inversa con el modelo Vacaciones
+
+  // Relación con VacacionesExtemporaneas
+  vacacionesExtemporaneas VacacionesExtemporaneas[] // Relación inversa con el modelo VacacionesExtemporaneas
+
+  // Relación con Permisos
+  permisos       Permisos[]      // Relación inversa con el modelo Permisos
 }
 
 model Aviso {
@@ -99,6 +108,54 @@ model ProjectUser {
   project  Project  @relation(fields: [projectId], references: [id])
 
   @@unique([userId, projectId])  // Asegura que no haya duplicados para un usuario en un proyecto
+}
+
+model Vacaciones {
+  id                Int       @id @default(autoincrement())
+  userId            Int       // Foreign key a User
+  tipo_vacaciones   String    // Tipo de vacaciones (Ej. Anual, Especial)
+  fecha_inicio      DateTime  // Fecha de inicio de vacaciones
+  fecha_fin         DateTime  // Fecha de fin de vacaciones
+  dias_vacaciones   Int       // Número de días de vacaciones asignados
+  dias_restantes    Int       // Días de vacaciones restantes
+  estado_solicitud  String    @default("Pendiente")  // Estado de la solicitud de vacaciones
+  createdAt         DateTime  @default(now())        // Fecha de creación
+  updatedAt         DateTime  @updatedAt             // Fecha de última actualización
+
+  // Relación con User
+  usuario           User      @relation(fields: [userId], references: [id])
+}
+
+model VacacionesExtemporaneas {
+  id                Int       @id @default(autoincrement())
+  userId            Int       // Foreign key a User
+  fecha_inicio      DateTime  // Fecha de inicio de vacaciones extemporáneas
+  fecha_fin         DateTime  // Fecha de fin de vacaciones extemporáneas
+  dias_vacaciones   Int       // Número de días solicitados extemporáneamente
+  estado_solicitud  String    @default("Pendiente")  // Estado de la solicitud de vacaciones extemporáneas
+  persona_aprueba   Int?      // Persona que aprueba la solicitud (usuario de RRHH)
+  createdAt         DateTime  @default(now())        // Fecha de creación
+  updatedAt         DateTime  @updatedAt             // Fecha de última actualización
+
+  // Relación con User
+  usuario           User      @relation(fields: [userId], references: [id])
+}
+
+model Permisos {
+  id                Int       @id @default(autoincrement())
+  userId            Int       // Foreign key a User
+  motivo_permiso    String    // Motivo del permiso
+  fecha_inicio      DateTime  // Fecha y hora de inicio del permiso
+  fecha_fin         DateTime  // Fecha y hora de fin del permiso
+  horas_de_permiso  String    // Duración del permiso en horas
+  estado_solicitud  String    @default("Pendiente")  // Estado de la solicitud de permiso
+  fecha_recuperacion_inicio DateTime? // Fecha y hora de inicio de la recuperación del permiso
+  fecha_recuperacion_fin    DateTime? // Fecha y hora de fin de la recuperación del permiso
+  createdAt         DateTime  @default(now())        // Fecha de creación
+  updatedAt         DateTime  @updatedAt             // Fecha de última actualización
+
+  // Relación con User
+  usuario           User      @relation(fields: [userId], references: [id])
 }
 
 enum Role {
