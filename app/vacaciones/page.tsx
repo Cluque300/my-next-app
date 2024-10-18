@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext'; // Ajusta esta ruta según tu estructura
-import { List, ListItem, Button, Typography, Container, Box } from '@mui/material';
+import { List, ListItem, Button, Typography, Container, Box, Paper } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 export default function VacacionesPage() {
@@ -25,28 +25,52 @@ export default function VacacionesPage() {
   };
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h4" gutterBottom>Mis Vacaciones</Typography>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 3 }}>
+        <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', mb: 4 }}>
+          Mis Vacaciones
+        </Typography>
+
         <List>
           {vacaciones.length === 0 ? (
-            <Typography>No tienes vacaciones solicitadas.</Typography>
+            <Typography variant="body1" sx={{ textAlign: 'center' }}>
+              No tienes vacaciones solicitadas.
+            </Typography>
           ) : (
             vacaciones.map((vacacion: any) => (
-              <ListItem key={vacacion.id}>
+              <ListItem
+                key={vacacion.id}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2,
+                  p: 2,
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '8px',
+                }}
+              >
                 <Typography variant="body1">
                   {vacacion.tipo_vacaciones} - Desde {new Date(vacacion.fecha_inicio).toLocaleDateString()} hasta {new Date(vacacion.fecha_fin).toLocaleDateString()}
                 </Typography>
-                <Button onClick={() => handleEdit(vacacion.id)}>Editar</Button>
+                <Button variant="outlined" size="small" onClick={() => handleEdit(vacacion.id)}>
+                  Editar
+                </Button>
               </ListItem>
             ))
           )}
         </List>
-        <Button variant="contained" sx={{ mt: 3 }} onClick={() => router.push('/vacaciones/solicitud')}>
-          Solicitar Vacaciones
-        </Button>
-      </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => router.push('/vacaciones/solicitud')}
+          >
+            Solicitar Vacaciones
+          </Button>
+        </Box>
+      </Paper>
     </Container>
   );
 }
-

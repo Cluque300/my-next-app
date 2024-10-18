@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'; // Importa desde next/navigation
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext'; // Asegúrate de que esta ruta sea correcta
+import { Container, TextField, Button, Box, Typography, Paper } from '@mui/material'; // Importa componentes de MUI
 
 const CreateEventPage = () => {
   const { userId } = useAuth(); // Obtén el userId del contexto
@@ -31,44 +32,51 @@ const CreateEventPage = () => {
   };
 
   return (
-    <div>
-      <h1>Crear Evento</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="title">Título</label>
-        <input
-          id="title"
-          type="text"
-          placeholder="Título"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-        <label htmlFor="start">Inicio</label>
-        <input
-          id="start"
-          type="datetime-local"
-          value={start}
-          onChange={(e) => setStart(e.target.value)}
-          required
-        />
-        <label htmlFor="end">Fin</label>
-        <input
-          id="end"
-          type="datetime-local"
-          value={end}
-          onChange={(e) => setEnd(e.target.value)}
-          required
-        />
-        <label htmlFor="description">Descripción</label>
-        <textarea
-          id="description"
-          placeholder="Descripción"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button type="submit">Crear</button>
-      </form>
-    </div>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Crear Evento
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            label="Título"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            fullWidth
+            required
+          />
+          <TextField
+            label="Inicio"
+            type="datetime-local"
+            value={start}
+            onChange={(e) => setStart(e.target.value)}
+            fullWidth
+            required
+            InputLabelProps={{ shrink: true }}
+          />
+          <TextField
+            label="Fin"
+            type="datetime-local"
+            value={end}
+            onChange={(e) => setEnd(e.target.value)}
+            fullWidth
+            required
+            InputLabelProps={{ shrink: true }}
+          />
+          <TextField
+            label="Descripción"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            multiline
+            rows={4}
+            fullWidth
+          />
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Crear Evento
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

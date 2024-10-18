@@ -11,6 +11,7 @@ body {
   color: #333;
   line-height: 1.6;
   margin: 0;
+  padding-top: 73.5px; /* Deja espacio para el header */
   min-height: 100vh;
 }
 
@@ -23,11 +24,19 @@ body {
 .main-content {
   flex-grow: 1;
   padding: 2rem;
+  transition: margin-left 0.3s ease;
+  overflow-y: auto;
+}
+
+/* Clase para añadir margen izquierdo solo si el drawer está abierto */
+.drawer-open .main-content {
+  margin-left: 240px; /* Deja espacio para el drawer */
 }
 
 /* Estilos responsivos globales */
 @media (max-width: 768px) {
   .main-content {
     padding: 1rem;
+    margin-left: 0; /* Sin margen para el drawer en pantallas pequeñas */
   }
 }

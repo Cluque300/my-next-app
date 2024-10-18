@@ -14,14 +14,14 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="es">
-      <body>
-        <AuthProvider> {/* Envuelve toda la aplicación con el AuthProvider */}
+      <AuthProvider> {/* Mueve el AuthProvider para envolver todo */}
+        <body> {/* Ya no usamos una clase condicional aquí */}
           <div className="layout-container">
             <Header /> {/* El Header se muestra en todas las rutas */}
             <LayoutContent>{children}</LayoutContent> {/* Controla el contenido del layout */}
           </div>
-        </AuthProvider>
-      </body>
+        </body>
+      </AuthProvider>
     </html>
   );
 }
@@ -30,8 +30,10 @@ function LayoutContent({ children }: { children: ReactNode }) {
   const { isLoggedIn } = useAuth(); // Obtener el estado de autenticación
 
   return isLoggedIn ? (
-    <ResponsiveDrawer>{children}</ResponsiveDrawer> // Si el usuario está autenticado, se muestra el Drawer
+    <div className="drawer-open"> {/* Aplicar la clase drawer-open solo si el usuario está autenticado */}
+      <ResponsiveDrawer>{children}</ResponsiveDrawer> {/* Si el usuario está autenticado, se muestra el Drawer */}
+    </div>
   ) : (
-    <main className="main-content">{children}</main> // Si no está autenticado, se muestra el contenido como siempre
+    <main className="main-content">{children}</main> // Si no está autenticado, se muestra el contenido sin drawer
   );
 }

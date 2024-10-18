@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import styles from './admin.module.css'; // Opcional: Estilos personalizados para la página de administración
+import { Container, Typography, Box, List, ListItem, ListItemText, CircularProgress, Button } from '@mui/material';
 
 const AdminDashboard = () => {
     const [adminId, setAdminId] = useState<number | null>(null);
@@ -25,63 +25,84 @@ const AdminDashboard = () => {
     }, []);
 
     if (adminId === null) {
-        return <p>Cargando...</p>; // O cualquier otro manejo que desees
+        return <CircularProgress />; // Indicador de carga mientras se obtiene el adminId
     }
 
     return (
-        <div className={styles.adminDashboard}>
-            <h1>Panel de Administración</h1>
+        <Container maxWidth="md" sx={{ mt: 4 }}>
+            <Typography variant="h4" gutterBottom>
+                Panel de Administración
+            </Typography>
 
-            <Link href={`/users/${adminId}`}>
-                Mi Perfil
-            </Link>
+            <Box sx={{ mb: 4 }}>
+                <Button variant="outlined" component={Link} href={`/users/${adminId}`} fullWidth>
+                    Mi Perfil
+                </Button>
+            </Box>
 
-            <div className={styles.section}>
-                <h2>Gestión de Usuarios</h2>
-                <ul>
-                    <li>
-                        <Link href="/admin/users">
+            <Box sx={{ mb: 4 }}>
+                <Typography variant="h5" gutterBottom>
+                    Gestión de Usuarios
+                </Typography>
+                <List>
+                    <ListItem>
+                        <Button variant="contained" component={Link} href="/admin/users" fullWidth>
                             Lista de Usuarios
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/admin/users/create">
+                        </Button>
+                    </ListItem>
+                    <ListItem>
+                        <Button variant="contained" component={Link} href="/admin/users/create" fullWidth>
                             Crear Usuario
-                        </Link>
-                    </li>
-                </ul>
-            </div>
+                        </Button>
+                    </ListItem>
+                </List>
+            </Box>
 
-            {/* Puedes agregar más secciones para otras funcionalidades aquí */}
-            <div className={styles.section}>
-                <h2>Otras Secciones (Futuras)</h2>
-                <ul>
-                    <li>
-                        <Link href="/admin/roles">
+            <Box sx={{ mb: 4 }}>
+                <Typography variant="h5" gutterBottom>
+                    Solicitudes
+                </Typography>
+                <List>
+                    <ListItem>
+                        <Button variant="contained" component={Link} href="/admin/solicitudes" fullWidth>
+                            Ver Solicitudes
+                        </Button>
+                    </ListItem>
+                </List>
+            </Box>
+
+            <Box sx={{ mb: 4 }}>
+                <Typography variant="h5" gutterBottom>
+                    Otras Secciones (Futuras)
+                </Typography>
+                <List>
+                    <ListItem>
+                        <Button variant="contained" component={Link} href="/admin/roles" fullWidth>
                             Gestión de Roles (Futuro)
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/admin/reports">
+                        </Button>
+                    </ListItem>
+                    <ListItem>
+                        <Button variant="contained" component={Link} href="/admin/reports" fullWidth>
                             Reportes y Estadísticas (Futuro)
-                        </Link>
-                    </li>
-                </ul>
-            </div>
+                        </Button>
+                    </ListItem>
+                </List>
+            </Box>
 
-            <div className={styles.section}>
-                <h2>Configuraciones</h2>
-                <ul>
-                    <li>
-                        <Link href="/admin/settings">
+            <Box sx={{ mb: 4 }}>
+                <Typography variant="h5" gutterBottom>
+                    Configuraciones
+                </Typography>
+                <List>
+                    <ListItem>
+                        <Button variant="contained" component={Link} href="/admin/settings" fullWidth>
                             Configuraciones Generales (Futuro)
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-        </div>
+                        </Button>
+                    </ListItem>
+                </List>
+            </Box>
+        </Container>
     );
 };
 
 export default AdminDashboard;
-

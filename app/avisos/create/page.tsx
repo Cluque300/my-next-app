@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext'; // Asegúrate de que esta ruta sea correcta
-import styles from './create.module.css'; // Crea este archivo CSS si es necesario
+import { Container, TextField, Button, Typography, Box, CircularProgress, Alert } from '@mui/material';
+import { useRouter } from 'next/navigation'; // Importamos el router para redirigir
 
 export default function CreateAviso() {
   const { userId } = useAuth(); // Obtén el userId del contexto
@@ -10,6 +11,7 @@ export default function CreateAviso() {
   const [date, setDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const router = useRouter(); // Inicializamos el router
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,6 +34,9 @@ export default function CreateAviso() {
       // Reinicia el formulario
       setDescription('');
       setDate('');
+
+      // Redirige a /avisos tras crear exitosamente
+      router.push('/avisos');
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message); // Asegúrate de que error sea de tipo Error
@@ -44,33 +49,41 @@ export default function CreateAviso() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1>Crear Aviso</h1>
+    <Container maxWidth="sm" sx={{ mt: 6 }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        Crear Aviso
+      </Typography>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="description">Descripción:</label>
-          <textarea
-            id="description"
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <TextField
+            label="Descripción"
+            multiline
+            rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
+            fullWidth
           />
-        </div>
-        <div>
-          <label htmlFor="date">Fecha:</label>
-          <input
+          <TextField
+            label="Fecha"
             type="date"
-            id="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
+            InputLabelProps={{ shrink: true }}
+            fullWidth
           />
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Creando...' : 'Crear Aviso'}
-        </button>
-        {error && <p className={styles.error}>{error}</p>}
+          <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
+            {loading ? <CircularProgress size={24} /> : 'Crear Aviso'}
+          </Button>
+          {error && (
+            <Alert severity="error">
+              {error}
+            </Alert>
+          )}
+        </Box>
       </form>
-    </div>
+    </Container>
   );
 }
+

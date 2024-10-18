@@ -1,6 +1,7 @@
 // /app/components/LogoutButton.tsx
 "use client";
 
+import { Button } from '@mui/material'; // Importa el componente Button de Material UI
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 
@@ -19,9 +20,13 @@ export default function LogoutButton() {
   };
 
   return (
-    <button onClick={handleLogout}>
+    <Button
+      variant="contained"
+      color="secondary"
+      onClick={handleLogout}
+      sx={{ mt: 2 }} // Añade un margen superior opcional
+    >
       Cerrar sesión
-    </button>
+    </Button>
   );
 }
-

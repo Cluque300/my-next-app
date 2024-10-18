@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, CircularProgress } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, CircularProgress, Container, Box } from '@mui/material';
 import { useAuth } from '@/context/AuthContext'; // Si tienes un contexto de autenticación
 
 interface Solicitud {
@@ -36,24 +36,30 @@ export default function CarteleraPage() {
   }, [userId]);
 
   if (loading) {
-    return <CircularProgress />;
+    return (
+      <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <CircularProgress />
+      </Container>
+    );
   }
 
   return (
-    <div>
-      <Typography variant="h4" gutterBottom>
-        Mi Cartelera de Solicitudes
-      </Typography>
+    <Container maxWidth="md" sx={{ mt: 5 }}>
+      <Box mb={4}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Mi Cartelera de Solicitudes
+        </Typography>
+      </Box>
       {solicitudes.length === 0 ? (
-        <Typography>No tienes solicitudes registradas.</Typography>
+        <Typography align="center">No tienes solicitudes registradas.</Typography>
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Tipo de Solicitud</TableCell>
-                <TableCell>Fecha de Creación</TableCell>
-                <TableCell>Estado</TableCell>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Tipo de Solicitud</Typography></TableCell>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Fecha de Creación</Typography></TableCell>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Estado</Typography></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -72,6 +78,6 @@ export default function CarteleraPage() {
           </Table>
         </TableContainer>
       )}
-    </div>
+    </Container>
   );
 }

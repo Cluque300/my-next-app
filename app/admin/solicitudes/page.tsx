@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button } from '@mui/material';
+import { Button, Container, Box, Typography, Card, CardContent, Grid } from '@mui/material';
 
 interface Solicitud {
   id: number;
@@ -41,24 +41,49 @@ export default function SolicitudesPage() {
   };
 
   return (
-    <div>
-      <h1>Solicitudes Pendientes</h1>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Solicitudes Pendientes
+      </Typography>
       {solicitudes.length === 0 ? (
-        <p>No hay solicitudes pendientes.</p>
+        <Typography variant="body1">No hay solicitudes pendientes.</Typography>
       ) : (
-        solicitudes.map(solicitud => (
-          <div key={solicitud.id}>
-            <p>{solicitud.tipo_solicitud} de {solicitud.user.fullname}</p>
-            <p>Estado: {solicitud.estado_solicitud}</p>
-            {solicitud.estado_solicitud === 'Pendiente' && (
-              <>
-                <Button onClick={() => handleAceptar(solicitud.id, solicitud.tipo_solicitud)}>Aceptar</Button>
-                <Button onClick={() => handleRechazar(solicitud.id, solicitud.tipo_solicitud)}>Rechazar</Button>
-              </>
-            )}
-          </div>
-        ))
+        <Grid container spacing={3}>
+          {solicitudes.map(solicitud => (
+            <Grid item xs={12} key={solicitud.id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">
+                    {solicitud.tipo_solicitud.charAt(0).toUpperCase() + solicitud.tipo_solicitud.slice(1)} de {solicitud.user.fullname}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Estado: {solicitud.estado_solicitud}
+                  </Typography>
+                  {solicitud.estado_solicitud === 'Pendiente' && (
+                    <Box sx={{ mt: 2 }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleAceptar(solicitud.id, solicitud.tipo_solicitud)}
+                        sx={{ mr: 2 }}
+                      >
+                        Aceptar
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => handleRechazar(solicitud.id, solicitud.tipo_solicitud)}
+                      >
+                        Rechazar
+                      </Button>
+                    </Box>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       )}
-    </div>
+    </Container>
   );
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // Para navegar entre páginas
 import { useParams } from 'next/navigation'; // Para obtener los parámetros de la URL
 import Link from 'next/link';
+import { Container, Typography, Box, Button, Paper, CircularProgress } from '@mui/material';
 
 interface EventDetail {
   id: string;
@@ -45,53 +46,65 @@ const EventDetailPage = () => {
   }, [id]);
 
   if (loading) {
-    return <p>Cargando...</p>;
+    return <CircularProgress />;
   }
 
   if (error) {
-    return <p style={{ color: 'red' }}>{error}</p>;
+    return <Typography color="error">{error}</Typography>;
   }
 
   if (!event) {
-    return <p>No se encontró el evento.</p>;
+    return <Typography>No se encontró el evento.</Typography>;
   }
 
   return (
-    <div>
-      <h1>Detalles del Evento</h1>
-      <h2>{event.title}</h2>
-      <p>
-        <strong>Inicio:</strong> {new Date(event.start).toLocaleString()}
-      </p>
-      <p>
-        <strong>Fin:</strong> {new Date(event.end).toLocaleString()}
-      </p>
-      <p>
-        <strong>Descripción:</strong> {event.description || 'No hay descripción disponible.'}
-      </p>
-      
-      <div>
-        <Link href={`/calendario/${event.id}/edit`}>
-          <button>Editar Evento</button>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Detalles del Evento
+        </Typography>
+        <Typography variant="h5" gutterBottom>
+          {event.title}
+        </Typography>
+        <Box sx={{ mb: 2 }}>
+          <Typography>
+            <strong>Inicio:</strong> {new Date(event.start).toLocaleString()}
+          </Typography>
+          <Typography>
+            <strong>Fin:</strong> {new Date(event.end).toLocaleString()}
+          </Typography>
+          <Typography>
+            <strong>Descripción:</strong> {event.description || 'No hay descripción disponible.'}
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+          <Link href={`/calendario/${event.id}/edit`} passHref>
+            <Button variant="contained" color="primary">
+              Editar Evento
+            </Button>
+          </Link>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={async () => {
+              const res = await fetch(`/api/autch/calendario/${event.id}`, {
+                method: 'DELETE',
+              });
+              if (res.ok) {
+                router.push('/calendario');
+              } else {
+                setError('Error eliminando el evento');
+              }
+            }}
+          >
+            Eliminar Evento
+          </Button>
+        </Box>
+        <Link href="/calendario" passHref>
+          <Button variant="outlined">Volver al calendario</Button>
         </Link>
-        <button
-          onClick={async () => {
-            const res = await fetch(`/api/autch/calendario/${event.id}`, {
-              method: 'DELETE',
-            });
-            if (res.ok) {
-              router.push('/calendario');
-            } else {
-              setError('Error eliminando el evento');
-            }
-          }}
-        >
-          Eliminar Evento
-        </button>
-      </div>
-
-      <Link href="/calendario">Volver al calendario</Link>
-    </div>
+      </Paper>
+    </Container>
   );
 };
 

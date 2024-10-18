@@ -79,6 +79,14 @@ export default function ResponsiveDrawer(props: Props) {
     router.push('/calendario'); // Redirigir a la página de Mi Calendario
   };
 
+  const handleCarteleraRedirect = () => {
+    router.push('/cartelera'); // Redirigir a la página de Mi Cartelera
+  };
+
+  const handleProyectosRedirect = () => {
+    router.push('/proyectos'); // Redirigir a la página de Mis Proyectos
+  };
+
   const drawer = (
     <div>
       {/* Sección de usuario */}
@@ -104,11 +112,7 @@ export default function ResponsiveDrawer(props: Props) {
         <ListItem>
           <ListItemText primary="Cartelera" />
         </ListItem>
-        <ListItemButton>
-          <ListItemIcon><DashboardIcon /></ListItemIcon>
-          <ListItemText primary="General" />
-        </ListItemButton>
-        <ListItemButton>
+        <ListItemButton onClick={handleCarteleraRedirect}>
           <ListItemIcon><NotificationsIcon /></ListItemIcon>
           <ListItemText primary="Mi Cartelera" />
         </ListItemButton>
@@ -139,7 +143,7 @@ export default function ResponsiveDrawer(props: Props) {
           <ListItemIcon><AssignmentIcon /></ListItemIcon>
           <ListItemText primary="Mis Tareas" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton onClick={handleProyectosRedirect}>
           <ListItemIcon><WorkIcon /></ListItemIcon>
           <ListItemText primary="Mis Proyectos" />
         </ListItemButton>
@@ -187,7 +191,7 @@ export default function ResponsiveDrawer(props: Props) {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true, // Mejor rendimiento en dispositivos móviles.
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
