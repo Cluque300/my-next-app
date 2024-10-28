@@ -18,6 +18,7 @@ export async function GET() {
       return NextResponse.json({
         isLoggedIn: true,
         userId: user.id,
+        userRole: user.role, // Incluye el rol del usuario
       });
     } else {
       return NextResponse.json({ isLoggedIn: false });

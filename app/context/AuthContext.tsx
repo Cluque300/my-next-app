@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 interface AuthContextType {
   isLoggedIn: boolean | null;
   userId: number | null;
+  userRole: 'USER' | 'ADMIN' | null;
   loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -17,6 +18,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
+  const [userRole, setUserRole] = useState<'USER' | 'ADMIN' | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
@@ -24,22 +26,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await fetch('/api/autch/check-session', {
         method: 'GET',
-        credentials: 'include', // Asegúrate de que las cookies se envían con la solicitud
+        credentials: 'include',
       });
       const data = await response.json();
       setIsLoggedIn(data.isLoggedIn);
       setUserId(data.userId !== undefined ? data.userId : null);
+      setUserRole(data.userRole || null);
     } catch (error) {
       console.error('Error verificando la sesión:', error);
       setIsLoggedIn(false);
       setUserId(null);
+      setUserRole(null);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    checkUserSession(); // Llama a la función al inicio
+    checkUserSession();
   }, []);
 
   const login = async (username: string, password: string) => {
@@ -55,11 +59,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await response.json();
       setIsLoggedIn(true);
       setUserId(data.userId);
-
-      // Llama a checkUserSession para verificar el estado inmediatamente después de iniciar sesión
+      setUserRole(data.userRole);
       await checkUserSession();
-      
-      // Redirige después de verificar el estado
       router.push(data.redirectUrl);
     } else {
       throw new Error('Login failed');
@@ -74,6 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (response.ok) {
       setIsLoggedIn(false);
       setUserId(null);
+      setUserRole(null);
       router.push('/login');
     } else {
       console.error('Error al cerrar sesión');
@@ -81,7 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userId, loading, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, userId, userRole, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -94,3 +96,4 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
+
