@@ -1,5 +1,4 @@
 // app/context/AuthContext.tsx
-
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
@@ -7,7 +6,8 @@ import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   isLoggedIn: boolean | null;
-  userId: number | null; // Cambiado a number para reflejar el tipo de la base de datos
+  userId: number | null;
+  loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -17,22 +17,29 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
+  const checkUserSession = async () => {
+    try {
+      const response = await fetch('/api/autch/check-session', {
+        method: 'GET',
+        credentials: 'include', // Asegúrate de que las cookies se envían con la solicitud
+      });
+      const data = await response.json();
+      setIsLoggedIn(data.isLoggedIn);
+      setUserId(data.userId !== undefined ? data.userId : null);
+    } catch (error) {
+      console.error('Error verificando la sesión:', error);
+      setIsLoggedIn(false);
+      setUserId(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const checkUserSession = async () => {
-      try {
-        const response = await fetch('/api/autch/check-session');
-        const data = await response.json();
-        setIsLoggedIn(data.isLoggedIn);
-        setUserId(data.userId !== undefined ? data.userId : null);
-      } catch (error) {
-        console.error('Error verificando la sesión:', error);
-        setIsLoggedIn(false);
-        setUserId(null);
-      }
-    };
-    checkUserSession();
+    checkUserSession(); // Llama a la función al inicio
   }, []);
 
   const login = async (username: string, password: string) => {
@@ -47,7 +54,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (response.ok) {
       const data = await response.json();
       setIsLoggedIn(true);
-      setUserId(data.userId); // Se establece como number
+      setUserId(data.userId);
+
+      // Llama a checkUserSession para verificar el estado inmediatamente después de iniciar sesión
+      await checkUserSession();
+      
+      // Redirige después de verificar el estado
       router.push(data.redirectUrl);
     } else {
       throw new Error('Login failed');
@@ -60,7 +72,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (response.ok) {
-      document.cookie = 'user=; max-age=0; path=/';
       setIsLoggedIn(false);
       setUserId(null);
       router.push('/login');
@@ -70,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userId, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, userId, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

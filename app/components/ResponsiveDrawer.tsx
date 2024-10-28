@@ -87,6 +87,14 @@ export default function ResponsiveDrawer(props: Props) {
     router.push('/proyectos'); // Redirigir a la página de Mis Proyectos
   };
 
+  const handleCursosRedirect = () => {
+    router.push('/cursos'); // Redirigir a la página de Cursos
+  };
+
+  const handleNominasCertificadosRedirect = () => {
+    router.push('/nominas_certificados'); // Redirigir a la página de Nómina/Certificados
+  };
+
   const drawer = (
     <div>
       {/* Sección de usuario */}
@@ -120,7 +128,7 @@ export default function ResponsiveDrawer(props: Props) {
           <ListItemIcon><AnnouncementIcon /></ListItemIcon>
           <ListItemText primary="Avisos" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton onClick={handleCursosRedirect}>
           <ListItemIcon><BookIcon /></ListItemIcon>
           <ListItemText primary="Cursos" />
         </ListItemButton>
@@ -147,7 +155,7 @@ export default function ResponsiveDrawer(props: Props) {
           <ListItemIcon><WorkIcon /></ListItemIcon>
           <ListItemText primary="Mis Proyectos" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton onClick={handleNominasCertificadosRedirect}>
           <ListItemIcon><AttachMoneyIcon /></ListItemIcon>
           <ListItemText primary="Nómina/Certificados" />
         </ListItemButton>

@@ -1,30 +1,43 @@
 // app/components/AvisoCard.tsx
 import React from 'react';
-import { Card, CardContent, Typography, IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete'; // Asegúrate de tener el ícono de eliminación
+import { Card, CardContent, Typography, IconButton, Box } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface AvisoCardProps {
   description: string;
-  date: string; // Puedes cambiar esto a Date si prefieres
-  onDelete: () => void; // Añadir la función de borrar como prop
+  date: string;
+  onDelete: () => void;
 }
 
 const AvisoCard: React.FC<AvisoCardProps> = ({ description, date, onDelete }) => {
   return (
-    <Card variant="outlined" sx={{ position: 'relative' }}>
+    <Card
+      variant="outlined"
+      sx={{
+        position: 'relative',
+        boxShadow: 2,
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        '&:hover': {
+          transform: 'scale(1.02)',
+          boxShadow: 4,
+        },
+      }}
+    >
       <CardContent>
-        <Typography variant="h6" component="div">
-          {description}
-        </Typography>
-        <Typography color="textSecondary">
-          {new Date(date).toLocaleDateString()}
-        </Typography>
-        <IconButton 
-          onClick={onDelete} 
-          sx={{ position: 'absolute', bottom: 10, right: 10 }} // Posicionamiento en la tarjeta
+        <Box mb={1}>
+          <Typography variant="h6" fontWeight="bold" component="div">
+            {description}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            {new Date(date).toLocaleDateString()}
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onDelete}
+          sx={{ position: 'absolute', top: 8, right: 8 }}
           aria-label="delete"
         >
-          <DeleteIcon />
+          <DeleteIcon color="error" />
         </IconButton>
       </CardContent>
     </Card>

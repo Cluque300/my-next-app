@@ -1,9 +1,26 @@
-'use client'; // Marca este archivo como un Client Component
+'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
-import styles from './Users.module.css';
+import {
+  Button,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Avatar,
+  Box,
+  IconButton,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 interface User {
   id: string;
@@ -35,7 +52,7 @@ const UsersPage = () => {
     if (confirm(`¿Está seguro que desea eliminar al usuario con ID ${userId}?`)) {
       try {
         await axios.delete(`/api/autch/user/${userId}`);
-        setUsers(users.filter(user => user.id !== userId));
+        setUsers(users.filter((user) => user.id !== userId));
       } catch (error) {
         console.error('Error deleting user:', error);
       }
@@ -43,99 +60,62 @@ const UsersPage = () => {
   };
 
   return (
-    <div className={styles.mainContent}>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="#">
-          <h4>Recursos Humanos / Lista de Empleados</h4>
-        </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <i className="fa fa-align-justify"></i>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav mr-auto"></ul>
-          <Link href="/admin/users/create">
-            <button className="btn btn-primary">Añadir Usuario</button>
-          </Link>
-        </div>
-      </nav>
+    <Container maxWidth="lg">
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 4 }}>
+        <Typography variant="h4" component="h1">
+          Recursos Humanos / Lista de Empleados
+        </Typography>
+        <Button variant="contained" color="primary" component={Link} href="/admin/users/create">
+          Añadir Usuario
+        </Button>
+      </Box>
 
-      <div className="container-fluid">
-        <div className="row clearfix">
-          <div className="col-lg-12 col-md-12">
-            <div className="table-responsive">
-              <table className="table table-hover table-cards align-items-center">
-                <thead>
-                  <tr>
-                    <th scope="col">Usuario</th>
-                    <th scope="col">Celular</th>
-                    <th scope="col">Correo</th>
-                    <th scope="col">Acción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map(user => (
-                    <tr className="bg-white" key={user.id}>
-                      <th scope="row">
-                        <div className="media align-items-center">
-                          <img
-                            src={`/images/users/${user.avatar}`}
-                            className="avatar avatar-lg mr-3"
-                            alt="Avatar"
-                          />
-                          <div className="media-body">
-                            <h6 className="h5 font-weight-normal mb-0">
-                              {user.firstName} {user.lastName}
-                            </h6>
-                            <span className="font-weight-normal text-muted">
-                              {user.role}
-                            </span>
-                          </div>
-                        </div>
-                      </th>
-                      <td>+57 {user.phone}</td>
-                      <td>
-                        <span className="email">
-                          <a href={`mailto:${user.email}`} title="Enviar correo">
-                            {user.email}
-                          </a>
-                        </span>
-                      </td>
-                      <td>
-                        <div className="btn-group">
-                          <Link href={`/admin/users/${user.id}`}>
-                            <button className="btn btn-primary btn-sm" aria-label={`Ver usuario ${user.id}`}>
-                              <i className="fa fa-eye"></i>
-                            </button>
-                          </Link>
-                          <Link href={`/admin/users/${user.id}/edit`}>
-                            <button className="btn btn-primary btn-sm" aria-label={`Editar usuario ${user.id}`}>
-                              <i className="fa fa-edit"></i>
-                            </button>
-                          </Link>
-                          <button onClick={() => handleDelete(user.id)} className="btn btn-danger btn-sm" aria-label={`Eliminar usuario ${user.id}`}>
-                            <i className="fa fa-trash"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Usuario</TableCell>
+              <TableCell>Celular</TableCell>
+              <TableCell>Correo</TableCell>
+              <TableCell>Acción</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Avatar src={`/images/users/${user.avatar}`} sx={{ mr: 2 }} />
+                    <Box>
+                      <Typography variant="body1">{`${user.firstName} ${user.lastName}`}</Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {user.role}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </TableCell>
+                <TableCell>+57 {user.phone}</TableCell>
+                <TableCell>
+                  <a href={`mailto:${user.email}`}>{user.email}</a>
+                </TableCell>
+                <TableCell>
+                  <IconButton component={Link} href={`/admin/users/${user.id}`} aria-label="Ver usuario">
+                    <VisibilityIcon />
+                  </IconButton>
+                  <IconButton component={Link} href={`/admin/users/${user.id}/edit`} aria-label="Editar usuario">
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleDelete(user.id)} aria-label="Eliminar usuario" color="error">
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 };
 
 export default UsersPage;
-

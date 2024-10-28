@@ -4,13 +4,20 @@ import { cookies } from 'next/headers';
 
 export async function GET() {
   try {
-    const cookie = cookies().get('user'); // Obtén la cookie 'user'
+    const cookie = cookies().get('user');
 
     if (cookie) {
-      const user = JSON.parse(cookie.value); // Parsear el valor de la cookie
+      let user;
+      try {
+        user = JSON.parse(cookie.value);
+      } catch (error) {
+        console.error('Error parsing user cookie:', error);
+        return NextResponse.json({ isLoggedIn: false });
+      }
+
       return NextResponse.json({
         isLoggedIn: true,
-        userId: user.id, // Asegúrate de devolver el ID del usuario
+        userId: user.id,
       });
     } else {
       return NextResponse.json({ isLoggedIn: false });

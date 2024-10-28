@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 // Obtener todas las solicitudes de un usuario específico
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   const userId = parseInt(params.id);
 
   if (!userId) {
@@ -34,12 +37,13 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
     // Unir las solicitudes de vacaciones y permisos en un solo array
     const solicitudes = [
-      ...vacaciones.map(v => ({ ...v, tipo_solicitud: 'vacaciones' })),
-      ...permisos.map(p => ({ ...p, tipo_solicitud: 'permisos' })),
+      ...vacaciones.map((v) => ({ ...v, tipo_solicitud: 'vacaciones' })),
+      ...permisos.map((p) => ({ ...p, tipo_solicitud: 'permisos' })),
     ];
 
     return NextResponse.json(solicitudes, { status: 200 });
   } catch (error) {
+    console.error('Error obteniendo solicitudes:', error);
     return NextResponse.json({ error: 'Error obteniendo solicitudes' }, { status: 500 });
   }
 }

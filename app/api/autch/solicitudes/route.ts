@@ -4,27 +4,23 @@ import { prisma } from '@/lib/prisma';
 // Obtener todas las solicitudes pendientes (vacaciones y permisos)
 export async function GET(req: Request) {
   try {
-    // Obtener solicitudes de vacaciones pendientes
+    // Obtener solicitudes de vacaciones pendientes con solo los campos necesarios
     const vacaciones = await prisma.vacaciones.findMany({
-      where: {
-        estado_solicitud: 'Pendiente',
-      },
-      include: {
-        usuario: {
-          select: { fullname: true },
-        },
+      where: { estado_solicitud: 'Pendiente' },
+      select: {
+        id: true,
+        estado_solicitud: true,
+        usuario: { select: { fullname: true } },
       },
     });
 
-    // Obtener solicitudes de permisos pendientes
+    // Obtener solicitudes de permisos pendientes con solo los campos necesarios
     const permisos = await prisma.permisos.findMany({
-      where: {
-        estado_solicitud: 'Pendiente',
-      },
-      include: {
-        usuario: {
-          select: { fullname: true },
-        },
+      where: { estado_solicitud: 'Pendiente' },
+      select: {
+        id: true,
+        estado_solicitud: true,
+        usuario: { select: { fullname: true } },
       },
     });
 

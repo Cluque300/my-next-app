@@ -8,38 +8,50 @@ generator client {
 }
 
 model User {
-  id             Int             @id @default(autoincrement())
-  fullname       String
-  fulllastname   String
-  email          String          @unique
-  username       String          @unique
-  password       String
-  foto           String?         // Campo opcional para foto
-  estadoUsuario  String?         // Estado opcional del usuario
-  role           Role            @default(USER)  // Rol del usuario
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id                        Int                     @id @default(autoincrement())
+  fullname                  String
+  fulllastname              String
+  email                     String                  @unique
+  username                  String                  @unique
+  password                  String
+  foto                      String?                 // Campo opcional para foto
+  estadoUsuario             String?                 // Estado opcional del usuario
+  role                      Role                    @default(USER)  // Rol del usuario
+  createdAt                 DateTime                @default(now())
+  updatedAt                 DateTime                @updatedAt
 
   // Relación con Aviso
-  avisos         Aviso[]         // Un usuario puede tener múltiples avisos
+  avisos                    Aviso[]                 // Un usuario puede tener múltiples avisos
 
   // Relación con Inventario
-  inventario     Inventario[]    // Un usuario puede agregar múltiples elementos al inventario
+  inventario                Inventario[]            // Un usuario puede agregar múltiples elementos al inventario
 
   // Relación con CalendarEvent
-  calendarEvents CalendarEvent[] // Un usuario puede tener múltiples eventos de calendario
+  calendarEvents            CalendarEvent[]         // Un usuario puede tener múltiples eventos de calendario
 
   // Relación con ProjectUser (tabla intermedia)
-  projectUsers   ProjectUser[]   // Un usuario puede estar en múltiples proyectos
+  projectUsers              ProjectUser[]           // Un usuario puede estar en múltiples proyectos
 
   // Relación con Vacaciones
-  vacaciones     Vacaciones[]    // Relación inversa con el modelo Vacaciones
+  vacaciones                Vacaciones[]            // Relación inversa con el modelo Vacaciones
 
   // Relación con VacacionesExtemporaneas
-  vacacionesExtemporaneas VacacionesExtemporaneas[] // Relación inversa con el modelo VacacionesExtemporaneas
+  vacacionesExtemporaneas   VacacionesExtemporaneas[] // Relación inversa con el modelo VacacionesExtemporaneas
 
   // Relación con Permisos
-  permisos       Permisos[]      // Relación inversa con el modelo Permisos
+  permisos                  Permisos[]              // Relación inversa con el modelo Permisos
+
+  // Relación con InscripcionCursos
+  inscripcionCursos         InscripcionCursos[]     // Un usuario puede estar inscrito en múltiples cursos
+
+  // Relación con Cursos
+  cursos                    Cursos[]                // Un usuario puede crear múltiples cursos
+
+  // Relación con Certificados
+  certificados              Certificados[]          // Un usuario puede tener múltiples certificados
+
+  // Relación con Nominas
+  nominas                   Nominas[]               // Un usuario puede tener múltiples nóminas
 }
 
 model Aviso {
@@ -60,8 +72,8 @@ model Inventario {
   tipo_elemento  String    // Tipo del elemento (Ej. equipo, herramienta, etc.)
   imagen         String?   // URL o ruta de la imagen del elemento
   categoria      String    // Categoría del elemento
-  createdAt      DateTime  @default(now()) // Fecha de creación
-  updatedAt      DateTime  @updatedAt      // Fecha de última actualización
+  createdAt     DateTime  @default(now()) // Fecha de creación
+  updatedAt     DateTime  @updatedAt      // Fecha de última actualización
 
   // Relación con User (Opcional)
   user           User?     @relation(fields: [userId], references: [id])
@@ -156,6 +168,63 @@ model Permisos {
 
   // Relación con User
   usuario           User      @relation(fields: [userId], references: [id])
+}
+
+model Cursos {
+  id                Int       @id @default(autoincrement())
+  nombre            String    // Nombre del curso
+  descripcion       String?   // Descripción del curso
+  fecha_inicio      DateTime  // Fecha de inicio del curso
+  fecha_fin         DateTime  // Fecha de fin del curso
+  fecha_publicacion DateTime  @default(now()) // Fecha de publicación
+  ubicacion         String?   // Ubicación del curso
+  userId            Int       // Foreign key a User
+
+  // Relación con User
+  usuario           User      @relation(fields: [userId], references: [id])
+
+  // Relación con InscripcionCursos
+  inscripcion       InscripcionCursos[] // Un curso puede tener múltiples inscripciones
+}
+
+model InscripcionCursos {
+  id                Int       @id @default(autoincrement())
+  userId            Int       // Foreign key a User
+  cursoId           Int       // Foreign key a Curso
+  fecha_inscripcion DateTime  @default(now()) // Fecha de inscripción
+  estado_inscripcion String   @default("Pendiente") // Estado de la inscripción
+
+  // Relación con User
+  usuario           User      @relation(fields: [userId], references: [id])
+
+  // Relación con Cursos
+  curso             Cursos    @relation(fields: [cursoId], references: [id])
+
+  @@unique([userId, cursoId]) // Asegura que no haya duplicados de inscripción
+}
+
+model Certificados {
+  id_certificado      Int       @id @default(autoincrement())
+  userId              Int       // Foreign key a User
+  nombre_certificado   String    // Nombre del certificado
+  usuario_sube_certificado String // Usuario que subió el certificado
+  fecha_subida        DateTime  @default(now()) // Fecha de subida
+  archivo_certificado String     // Ruta del archivo
+
+  // Relación con User
+  usuario             User      @relation(fields: [userId], references: [id])
+}
+
+model Nominas {
+  id_nomina          Int       @id @default(autoincrement())
+  userId             Int       // Foreign key a User
+  usuario_sube_nomina String    // Usuario que subió la nómina
+  nombre_nomina      String     // Nombre de la nómina
+  fecha_subida       DateTime  @default(now()) // Fecha de subida
+  archivo_nomina     String     // Ruta del archivo
+
+  // Relación con User
+  usuario            User      @relation(fields: [userId], references: [id])
 }
 
 enum Role {
