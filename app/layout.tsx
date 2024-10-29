@@ -7,7 +7,7 @@ import Header from './components/Header';
 import ResponsiveDrawer from './components/ResponsiveDrawer';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CircularProgress, Typography, Container } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface Props {
   children: ReactNode;
@@ -29,19 +29,27 @@ export default function RootLayout({ children }: Props) {
 }
 
 function LayoutContent({ children }: { children: ReactNode }) {
-  const { isLoggedIn, userRole, userId, loading } = useAuth();
+  const { isLoggedIn, userRole, userId, loading, isCurrentUser } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!loading) {
-      const isPublicRoute = ['/login', '/register'].includes(location.pathname);
+      const isPublicRoute = ['/login', '/register'].includes(pathname);
+      const isProfileRoute = pathname.startsWith('/users/');
+
       if (!isLoggedIn && !isPublicRoute) {
         router.push('/login');
       } else if (isLoggedIn && isPublicRoute) {
         router.push(userRole === 'ADMIN' ? '/admin' : `/users/${userId}`);
+      } else if (isProfileRoute) {
+        const pathId = parseInt(pathname.split('/')[2]);
+        if (!isCurrentUser(pathId)) {
+          router.push(`/users/${userId}`);
+        }
       }
     }
-  }, [isLoggedIn, userRole, userId, loading, router]);
+  }, [isLoggedIn, userRole, userId, loading, router, pathname, isCurrentUser]);
 
   if (loading) {
     return (
@@ -51,7 +59,7 @@ function LayoutContent({ children }: { children: ReactNode }) {
     );
   }
 
-  if (userRole === 'USER' && location.pathname.startsWith('/admin')) {
+  if (userRole === 'USER' && pathname.startsWith('/admin')) {
     return (
       <Container sx={{ textAlign: 'center', marginTop: 4 }}>
         <Typography variant="h6" color="error">

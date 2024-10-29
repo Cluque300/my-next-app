@@ -11,6 +11,7 @@ interface AuthContextType {
   loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  isCurrentUser: (id: number) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -82,8 +83,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const isCurrentUser = (id: number) => {
+    return userId === id;
+  };
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userId, userRole, loading, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, userId, userRole, loading, login, logout, isCurrentUser }}>
       {children}
     </AuthContext.Provider>
   );
@@ -96,4 +101,3 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
-

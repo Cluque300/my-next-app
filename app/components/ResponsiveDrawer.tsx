@@ -95,6 +95,10 @@ export default function ResponsiveDrawer(props: Props) {
     router.push('/nominas_certificados'); // Redirigir a la página de Nómina/Certificados
   };
 
+  const handleListaDeContactosRedirect = () => {
+    router.push('/users'); // Redirigir a la página de Lista de Contactos
+  };
+
   const drawer = (
     <div>
       {/* Sección de usuario */}
@@ -170,7 +174,7 @@ export default function ResponsiveDrawer(props: Props) {
           <ListItemIcon><AccountCircleIcon /></ListItemIcon>
           <ListItemText primary="Mi Perfil" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton onClick={handleListaDeContactosRedirect}>
           <ListItemIcon><ContactsIcon /></ListItemIcon>
           <ListItemText primary="Lista de Contactos" />
         </ListItemButton>

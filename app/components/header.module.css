@@ -10,7 +10,7 @@
   top: 0;
   width: 100%;
   z-index: 1300;
-  box-shadow: 0px 4px 2px -2px gray; /* Añadir una sombra para visualización clara */
+  box-shadow: 0px 4px 2px -2px gray;
 }
 
 .nav {
@@ -20,16 +20,25 @@
   width: 100%;
 }
 
-.logo a {
+.logoContainer {
   display: flex;
   align-items: center;
-  text-decoration: none;
+  flex: 1;
 }
 
 .logoImage {
   width: 85px;
   height: auto;
-  filter: invert(100%);
+  filter: brightness(0) invert(1); /* Aumenta el contraste al blanco puro */
+  margin-right: 0.75rem;
+  margin-top: 4px; /* Centra verticalmente */
+}
+
+.companyName {
+  font-size: 1.5rem; /* Tamaño de letra aumentado */
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
 }
 
 .navLinks {

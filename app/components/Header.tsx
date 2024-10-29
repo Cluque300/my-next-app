@@ -1,40 +1,38 @@
 // app/components/Header.tsx
-"use client"; // Asegúrate de que esto esté presente si usas hooks de estado
+"use client";
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import LogoutButton from './logoutbutton';
 import { useAuth } from '../context/AuthContext';
-import Link from 'next/link'; // Importación de Link para navegación sin recarga
-import styles from './header.module.css'; // Importamos el archivo de estilos CSS del header
+import Link from 'next/link';
+import UserMenu from './UserMenu'; // Importa el UserMenu desde la ubicación correcta
+import styles from './header.module.css';
 
 export default function Header() {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, userId } = useAuth(); // Asegúrate de obtener userId aquí
 
-  // Hook para depurar si el estado de autenticación está cambiando
   useEffect(() => {
     console.log('El estado de isLoggedIn cambió:', isLoggedIn);
   }, [isLoggedIn]);
 
-  if (isHomePage) return null; // Si estamos en la homepage, no mostramos el header
+  if (isHomePage) return null;
 
   return (
     <header className={styles.header}>
       <nav className={styles.nav}>
-        <div className={styles.logo}>
+        <div className={styles.logoContainer}>
           <Link href="/">
             <img src="/images/isotipohb.svg" alt="Logo" className={styles.logoImage} />
           </Link>
+          <span className={styles.companyName}>HumanBionics</span>
         </div>
         <ul className={styles.navLinks}>
-          <li><Link href="/">Home</Link></li>
-          <li><Link href="/about">About</Link></li>
           {isLoggedIn === null ? (
             <li>Cargando...</li>
           ) : isLoggedIn ? (
-            <li><LogoutButton /></li>
+            <li><UserMenu userId={userId} /></li> // Pasa el userId a UserMenu
           ) : (
             <li><Link href="/login">Iniciar sesión</Link></li>
           )}
@@ -43,4 +41,7 @@ export default function Header() {
     </header>
   );
 }
+
+
+
 
