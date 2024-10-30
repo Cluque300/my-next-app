@@ -52,6 +52,9 @@ model User {
 
   // Relación con Nominas
   nominas                   Nominas[]               // Un usuario puede tener múltiples nóminas
+
+  // Relación con Noticia
+  noticias                  Noticia[]               // Un usuario puede crear múltiples noticias
 }
 
 model Aviso {
@@ -225,6 +228,20 @@ model Nominas {
 
   // Relación con User
   usuario            User      @relation(fields: [userId], references: [id])
+}
+
+model Noticia {
+  id                 Int       @id @default(autoincrement())
+  titulo             String    // Título de la noticia
+  imagen             String?   // URL o ruta de la imagen de la noticia
+  descripcion        String    // Descripción detallada de la noticia
+  fechaPublicacion   DateTime  @default(now()) // Fecha de publicación de la noticia
+  userId             Int       // Foreign key estándar que conecta al usuario que publica
+
+  // Relación con el modelo User
+  usuario            User      @relation(fields: [userId], references: [id])
+
+  @@index([userId]) // Índice para consultas rápidas por usuario
 }
 
 enum Role {

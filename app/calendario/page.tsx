@@ -1,36 +1,53 @@
 // app/calendario/page.tsx
 'use client';
 
-import { Box, Button } from '@mui/material';
-import { useRouter } from 'next/navigation'; // Importa el hook useRouter para redirecciones
-import StyledCalendar from '../components/StyledCalendar'; // Importa desde el lugar correcto
+import { Box, Button, Typography, Paper } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import StyledCalendar from '../components/StyledCalendar';
+import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+import EventIcon from '@mui/icons-material/Event';
 
 const CalendarPage = () => {
-  const router = useRouter(); // Usa el hook useRouter para la redirección
+  const router = useRouter();
 
   return (
-    <Box sx={{ padding: 2, position: 'relative' }}>
-      <h1>Calendario</h1>
-      <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={() => router.push('/vacaciones')} // Redirección a vacaciones
-          sx={{ marginRight: 1 }} // Espaciado entre los botones
+    <Paper
+      sx={{
+        padding: 4,
+        backgroundColor: '#f4f6f8',
+        borderRadius: 2,
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+        maxWidth: '900px',
+        margin: 'auto',
+        mt: 5,
+      }}
+    >
+      <Typography variant="h4" align="center" gutterBottom>
+        Calendario
+      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<BeachAccessIcon />}
+          onClick={() => router.push('/vacaciones')}
+          sx={{ mr: 1 }}
         >
           Vacaciones
         </Button>
-        <Button 
-          variant="contained" 
-          color="secondary" 
-          onClick={() => router.push('/permisos')} // Redirección a permisos
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<EventIcon />}
+          onClick={() => router.push('/permisos')}
         >
           Permisos
         </Button>
       </Box>
-      <StyledCalendar /> {/* Usa el componente StyledCalendar aquí */}
-    </Box>
+      <StyledCalendar />
+    </Paper>
   );
 };
 
 export default CalendarPage;
+
