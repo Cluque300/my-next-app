@@ -8,11 +8,11 @@ interface AdminUploadPageProps {
   title: string;
   endpoint: string;
   uploadLabel: string;
+  userId: number | null; // Asegúrate de recibir el userId
 }
 
-export default function AdminUploadPage({ title, endpoint, uploadLabel }: AdminUploadPageProps) {
+export default function AdminUploadPage({ title, endpoint, uploadLabel, userId }: AdminUploadPageProps) {
   const [file, setFile] = useState<File | null>(null);
-  const [userId, setUserId] = useState<number | null>(null);
   const [nombre, setNombre] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +45,6 @@ export default function AdminUploadPage({ title, endpoint, uploadLabel }: AdminU
       });
       setSuccess('Archivo subido con éxito.');
       setNombre('');
-      setUserId(null);
       setFile(null);
     } catch (error) {
       setError('Error al subir el archivo. Inténtalo de nuevo.');
@@ -56,18 +55,9 @@ export default function AdminUploadPage({ title, endpoint, uploadLabel }: AdminU
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        {title}
-      </Typography>
+      <Typography variant="h4" align="center" gutterBottom>{title}</Typography>
 
       <Box display="flex" flexDirection="column" gap={2} sx={{ mt: 4 }}>
-        <TextField
-          label="ID del Usuario"
-          type="number"
-          value={userId || ''}
-          onChange={(e) => setUserId(Number(e.target.value))}
-          fullWidth
-        />
         <TextField
           label="Nombre"
           value={nombre}

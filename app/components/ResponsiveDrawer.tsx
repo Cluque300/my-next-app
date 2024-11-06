@@ -1,7 +1,6 @@
 "use client"; // Este archivo debe ser un componente de cliente
 
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
@@ -12,10 +11,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MenuIcon from '@mui/icons-material/Menu';
 
 // Importa los iconos de Material UI
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import EventIcon from '@mui/icons-material/Event';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import WorkIcon from '@mui/icons-material/Work';
@@ -46,8 +43,8 @@ export default function ResponsiveDrawer(props: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
-  // Obtener el userId y el estado de login del contexto
-  const { userId, isLoggedIn } = useAuth();
+  // Obtener la información del usuario desde el contexto
+  const { userId, userRole, userData, isLoggedIn } = useAuth(); // Ajustar para obtener datos del usuario
   const router = useRouter(); // Inicializamos el hook useRouter para la navegación
 
   const handleDrawerClose = () => {
@@ -99,17 +96,21 @@ export default function ResponsiveDrawer(props: Props) {
     router.push('/users'); // Redirigir a la página de Lista de Contactos
   };
 
+  const handleNoticiasRedirect = () => {
+    router.push('/noticias'); // Redirigir a la página de Noticias
+  };
+
   const drawer = (
     <div>
       {/* Sección de usuario */}
       <Box className={styles.userSection}>
         <img
-          src="URL_DE_TU_IMAGEN_DE_PERFIL" // Reemplaza con la URL de la imagen de perfil
+          src={userData?.foto || "URL_DE_TU_IMAGEN_DE_PERFIL"} // URL de la imagen de perfil, usar la del contexto
           alt="Perfil"
           className={styles.profileImage}
         />
-        <Box className={styles.userName}>Nombre Apellido</Box> {/* Reemplaza con el nombre del usuario */}
-        <Box className={styles.userRole}>Rol del Usuario</Box> {/* Reemplaza con el rol del usuario */}
+        <Box className={styles.userName}>{userData?.fullname || 'Nombre Apellido'}</Box> {/* Mostrar nombre */}
+        <Box className={styles.userRole}>{userRole || 'Rol del Usuario'}</Box> {/* Mostrar rol */}
         <Box className={styles.iconContainer}>
           <IconButton aria-label="Trello"><FaTrello /></IconButton>
           <IconButton aria-label="Slack"><SiSlack /></IconButton>
@@ -136,7 +137,7 @@ export default function ResponsiveDrawer(props: Props) {
           <ListItemIcon><BookIcon /></ListItemIcon>
           <ListItemText primary="Cursos" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton onClick={handleNoticiasRedirect}> {/* Botón de Noticias */}
           <ListItemIcon><AnnouncementIcon /></ListItemIcon>
           <ListItemText primary="Noticias" />
         </ListItemButton>

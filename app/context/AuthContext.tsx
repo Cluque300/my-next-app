@@ -4,10 +4,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface UserData {
+  id: number;
+  fullname: string;
+  fulllastname: string;
+  email: string;
+  username: string;
+  role: 'USER' | 'ADMIN';
+  foto?: string; // URL de la foto de perfil (opcional)
+}
+
 interface AuthContextType {
   isLoggedIn: boolean | null;
   userId: number | null;
   userRole: 'USER' | 'ADMIN' | null;
+  userData: UserData | null; // Nueva propiedad para almacenar datos del usuario
   loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -20,6 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [userRole, setUserRole] = useState<'USER' | 'ADMIN' | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null); // Nuevo estado
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
@@ -33,11 +45,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoggedIn(data.isLoggedIn);
       setUserId(data.userId !== undefined ? data.userId : null);
       setUserRole(data.userRole || null);
+      setUserData(data.userData || null); // Actualiza la información del usuario
     } catch (error) {
       console.error('Error verificando la sesión:', error);
       setIsLoggedIn(false);
       setUserId(null);
       setUserRole(null);
+      setUserData(null); // Resetear los datos del usuario
     } finally {
       setLoading(false);
     }
@@ -61,6 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoggedIn(true);
       setUserId(data.userId);
       setUserRole(data.userRole);
+      setUserData(data.userData); // Guardar la información del usuario después de iniciar sesión
       await checkUserSession();
       router.push(data.redirectUrl);
     } else {
@@ -77,6 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoggedIn(false);
       setUserId(null);
       setUserRole(null);
+      setUserData(null); // Resetear los datos del usuario
       router.push('/login');
     } else {
       console.error('Error al cerrar sesión');
@@ -88,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userId, userRole, loading, login, logout, isCurrentUser }}>
+    <AuthContext.Provider value={{ isLoggedIn, userId, userRole, userData, loading, login, logout, isCurrentUser }}>
       {children}
     </AuthContext.Provider>
   );

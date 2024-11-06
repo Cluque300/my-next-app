@@ -19,6 +19,15 @@ export async function GET() {
         isLoggedIn: true,
         userId: user.id,
         userRole: user.role, // Incluye el rol del usuario
+        userData: { // Asegúrate de incluir todos los datos necesarios
+          id: user.id,
+          fullname: user.fullname,
+          fulllastname: user.fulllastname,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          foto: user.foto,
+        },
       });
     } else {
       return NextResponse.json({ isLoggedIn: false });
