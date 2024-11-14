@@ -1,90 +1,95 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { Container, Typography, Card, CardContent, Button, CircularProgress, Box } from '@mui/material';
 import axios from 'axios';
+import { Container, Box, Typography, Button, Paper, Divider } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
+// Define la interfaz para los detalles de la nómina
 interface Nomina {
-  id_nomina: number; 
+  id_nomina: number;
   nombre_nomina: string;
-  fecha_subida: string; 
-  archivo_nomina: string; 
+  archivo_nomina?: string | null; // El archivo puede ser opcional
 }
 
-export default function NominaDetailPage() {
-  const router = useRouter();
-  const { id } = router.query;
+const NominaDetailPage = ({ params }: { params: { id: string } }) => {
+  const { id } = params;
   const [nomina, setNomina] = useState<Nomina | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    if (!id) return;
-
     const fetchNomina = async () => {
       try {
         const response = await axios.get(`/api/autch/nominas/${id}`);
         setNomina(response.data);
       } catch (error) {
-        console.error('Error obteniendo la nómina:', error);
-        setError('Hubo un error al obtener la nómina. Inténtalo de nuevo más tarde.');
-      } finally {
-        setLoading(false);
+        console.error('Error fetching nomina:', error);
       }
     };
 
     fetchNomina();
   }, [id]);
 
-  if (loading) {
-    return (
-      <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 4 }}>
-          <CircularProgress />
-        </Box>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Typography color="error" align="center">
-          {error}
-        </Typography>
-      </Container>
-    );
-  }
-
   if (!nomina) {
     return (
-      <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Typography align="center">No se encontró la nómina.</Typography>
-      </Container>
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Typography variant="h6" color="text.secondary">Cargando...</Typography>
+      </Box>
     );
   }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Card>
-        <CardContent>
-          <Typography variant="h4" gutterBottom>
-            {nomina.nombre_nomina}
+    <Container maxWidth="sm" sx={{ mt: 6 }}>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 3, boxShadow: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+          Detalles de la Nómina
+        </Typography>
+        <Divider sx={{ mb: 3 }} />
+
+        <Typography variant="h6" sx={{ fontWeight: 'medium', color: 'text.primary', mb: 1.5 }}>
+          Nombre de la Nómina
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          {nomina.nombre_nomina || 'Sin nombre'}
+        </Typography>
+
+        <Typography variant="h6" sx={{ fontWeight: 'medium', color: 'text.primary', mb: 1.5 }}>
+          Estado
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          {nomina.archivo_nomina ? 'Disponible para descarga' : 'Pendiente'}
+        </Typography>
+
+        {nomina.archivo_nomina ? (
+          <Button
+            variant="contained"
+            color="success"
+            href={nomina.archivo_nomina}
+            target="_blank"
+            rel="noopener noreferrer"
+            fullWidth
+            sx={{ fontWeight: 'bold', py: 1.5, mb: 2 }}
+          >
+            Descargar Nómina
+          </Button>
+        ) : (
+          <Typography variant="body2" color="error" align="center" sx={{ mb: 2 }}>
+            La nómina aún no está disponible para descargar.
           </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Fecha de subida: {new Date(nomina.fecha_subida).toLocaleDateString()}
-          </Typography>
-          <Box mt={3}>
-            <Button
-              variant="contained"
-              onClick={() => window.open(nomina.archivo_nomina, '_blank')}
-            >
-              Descargar Nómina
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
+        )}
+
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => router.back()}
+          fullWidth
+          sx={{ fontWeight: 'bold', py: 1.5 }}
+        >
+          Volver al Listado
+        </Button>
+      </Paper>
     </Container>
   );
-}
+};
+
+export default NominaDetailPage;

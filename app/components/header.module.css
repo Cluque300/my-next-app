@@ -27,7 +27,7 @@
 }
 
 .logoImage {
-  width: 85px;
+  width: 220px;
   height: auto;
   filter: brightness(0) invert(1); /* Aumenta el contraste al blanco puro */
   margin-right: 0.75rem;

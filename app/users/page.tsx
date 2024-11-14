@@ -2,8 +2,8 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, Box, Avatar } from '@mui/material';
-import { teal, blueGrey } from '@mui/material/colors';
+import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, Box, Avatar, Chip } from '@mui/material';
+import { teal, grey, blue } from '@mui/material/colors';
 
 interface User {
   id: number;
@@ -28,7 +28,7 @@ export default function UsersPage() {
           fullname: user.fullname,
           fulllastname: user.fulllastname,
           email: user.email,
-          estadoUsuario: user.estadoUsuario
+          estadoUsuario: user.estadoUsuario,
         }));
 
         setUsers(filteredData);
@@ -44,43 +44,88 @@ export default function UsersPage() {
 
   if (loading) {
     return (
-      <Container sx={{ textAlign: 'center', marginTop: 8 }}>
+      <Container sx={{ textAlign: 'center', mt: 8 }}>
         <CircularProgress size={60} sx={{ color: teal[600] }} />
-        <Typography variant="h6" sx={{ marginTop: 2 }}>Cargando usuarios...</Typography>
+        <Typography variant="h6" sx={{ mt: 2, color: teal[700] }}>Cargando usuarios...</Typography>
       </Container>
     );
   }
 
   return (
-    <Container sx={{ marginTop: 8, marginBottom: 4 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h4" sx={{ flexGrow: 1, fontWeight: '600', color: teal[700] }}>Lista de Usuarios</Typography>
+    <Container sx={{ mt: 8, mb: 4, textAlign: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, textAlign: 'center', justifyContent: 'center' }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 'bold',
+            color: teal[700],
+            borderBottom: `4px solid ${teal[700]}`,
+            display: 'inline-block',
+            pb: 1,
+          }}
+        >
+          👥 Lista de Usuarios
+        </Typography>
       </Box>
-      <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden' }}>
+
+      <TableContainer component={Paper} sx={{ boxShadow: '0px 4px 20px rgba(0,0,0,0.1)', borderRadius: 3, overflow: 'hidden' }}>
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: blueGrey[700] }}>
-              <TableCell><Typography fontWeight="bold" color="white">Nombre</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold" color="white">Apellido</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold" color="white">Correo</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold" color="white">Estado</Typography></TableCell>
+            <TableRow sx={{ backgroundColor: blue[700] }}>
+              <TableCell>
+                <Typography fontWeight="bold" color="white" align="center">Nombre</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography fontWeight="bold" color="white" align="center">Apellido</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography fontWeight="bold" color="white" align="center">Correo</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography fontWeight="bold" color="white" align="center">Estado</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map(user => (
-              <TableRow key={user.id} hover sx={{ '&:nth-of-type(odd)': { backgroundColor: blueGrey[50] } }}>
+              <TableRow
+                key={user.id}
+                hover
+                sx={{
+                  '&:nth-of-type(odd)': { backgroundColor: grey[50] },
+                  '&:nth-of-type(even)': { backgroundColor: grey[100] },
+                  '&:hover': {
+                    backgroundColor: blue[50],
+                  },
+                  transition: 'background-color 0.3s ease',
+                }}
+              >
                 <TableCell>
-                  <Box display="flex" alignItems="center">
-                    <Avatar sx={{ bgcolor: teal[500], mr: 2 }}>{user.fullname[0]}</Avatar>
-                    <Typography>{user.fullname}</Typography>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <Avatar sx={{ bgcolor: teal[500], fontWeight: 'bold' }}>
+                      {user.fullname[0].toUpperCase()}
+                    </Avatar>
+                    <Typography variant="body1" fontWeight="bold" sx={{ color: grey[800] }}>
+                      {user.fullname}
+                    </Typography>
                   </Box>
                 </TableCell>
-                <TableCell>{user.fulllastname}</TableCell>
-                <TableCell>{user.email}</TableCell>
                 <TableCell>
-                  <Typography variant="subtitle2" fontWeight="bold" color={user.estadoUsuario === 'Activo' ? teal[700] : 'error'}>
-                    {user.estadoUsuario}
-                  </Typography>
+                  <Typography variant="body1" sx={{ color: grey[700] }}>{user.fulllastname}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body1" sx={{ color: grey[700] }}>{user.email}</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Chip
+                    label={user.estadoUsuario}
+                    color={user.estadoUsuario === 'Activo' ? 'success' : 'error'}
+                    sx={{
+                      fontWeight: 'bold',
+                      fontSize: '0.875rem',
+                      paddingX: 1,
+                    }}
+                  />
                 </TableCell>
               </TableRow>
             ))}

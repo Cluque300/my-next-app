@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Container, Typography, Box, List, ListItem, CircularProgress, Button, Paper, Divider } from '@mui/material';
+import { Container, Typography, Box, Grid, CircularProgress, Button, Paper, Divider, Card, CardContent } from '@mui/material';
+import { Person, People, AttachMoney, Verified, School, Settings, Assignment, Announcement } from '@mui/icons-material';
 
 const AdminDashboard = () => {
     const [adminId, setAdminId] = useState<number | null>(null);
@@ -42,148 +43,159 @@ const AdminDashboard = () => {
                     Administra y supervisa la plataforma desde un único panel de control.
                 </Typography>
 
-                <Box display="flex" flexDirection="column" gap={3}>
-                    <Button
-                        variant="outlined"
-                        component={Link}
-                        href={`/users/${adminId}`}
-                        fullWidth
-                        sx={{ mb: 2, py: 1.5 }}
-                    >
-                        Mi Perfil
-                    </Button>
+                <Grid container spacing={3}>
+                    {/* Tarjeta Mi Perfil */}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Card variant="outlined" sx={{ textAlign: 'center', p: 2 }}>
+                            <CardContent>
+                                <Person fontSize="large" />
+                                <Button
+                                    variant="text"
+                                    component={Link}
+                                    href={`/users/${adminId}`}
+                                    sx={{ mt: 2 }}
+                                >
+                                    Mi Perfil
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-                    <Divider />
-
-                    <Box>
-                        <Typography variant="h5" gutterBottom>
-                            Gestión de Usuarios
-                        </Typography>
-                        <List>
-                            <ListItem disablePadding sx={{ mb: 1 }}>
+                    {/* Gestión de Usuarios */}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Card variant="outlined" sx={{ textAlign: 'center', p: 2 }}>
+                            <CardContent>
+                                <People fontSize="large" />
+                                <Typography variant="h6">Gestión de Usuarios</Typography>
                                 <Button
                                     variant="contained"
                                     component={Link}
                                     href="/admin/users"
-                                    fullWidth
-                                    sx={{ py: 1.5 }}
+                                    sx={{ mt: 1, width: '100%' }}
                                 >
                                     Lista de Usuarios
                                 </Button>
-                            </ListItem>
-                            <ListItem disablePadding>
                                 <Button
                                     variant="contained"
                                     component={Link}
                                     href="/admin/users/create"
-                                    fullWidth
-                                    sx={{ py: 1.5 }}
+                                    sx={{ mt: 1, width: '100%' }}
                                 >
                                     Crear Usuario
                                 </Button>
-                            </ListItem>
-                        </List>
-                    </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-                    <Divider />
-
-                    <Box>
-                        <Typography variant="h5" gutterBottom>
-                            Gestión de Nóminas
-                        </Typography>
-                        <List>
-                            <ListItem disablePadding sx={{ mb: 1 }}>
+                    {/* Gestión de Nóminas */}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Card variant="outlined" sx={{ textAlign: 'center', p: 2 }}>
+                            <CardContent>
+                                <AttachMoney fontSize="large" />
+                                <Typography variant="h6">Gestión de Nóminas</Typography>
                                 <Button
                                     variant="contained"
                                     component={Link}
                                     href="/admin/nominas"
-                                    fullWidth
-                                    sx={{ py: 1.5 }}
+                                    sx={{ mt: 1, width: '100%' }}
                                 >
                                     Gestionar Nóminas
                                 </Button>
-                            </ListItem>
-                        </List>
-                    </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-                    <Divider />
-
-                    <Box>
-                        <Typography variant="h5" gutterBottom>
-                            Gestión de Certificados
-                        </Typography>
-                        <List>
-                            <ListItem disablePadding sx={{ mb: 1 }}>
+                    {/* Gestión de Certificados */}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Card variant="outlined" sx={{ textAlign: 'center', p: 2 }}>
+                            <CardContent>
+                                <Verified fontSize="large" />
+                                <Typography variant="h6">Gestión de Certificados</Typography>
                                 <Button
                                     variant="contained"
                                     component={Link}
                                     href="/admin/certificados"
-                                    fullWidth
-                                    sx={{ py: 1.5 }}
+                                    sx={{ mt: 1, width: '100%' }}
                                 >
                                     Gestionar Certificados
                                 </Button>
-                            </ListItem>
-                        </List>
-                    </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-                    <Divider />
-
-                    <Box>
-                        <Typography variant="h5" gutterBottom>
-                            Cursos
-                        </Typography>
-                        <List>
-                            <ListItem disablePadding sx={{ mb: 1 }}>
+                    {/* Cursos */}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Card variant="outlined" sx={{ textAlign: 'center', p: 2 }}>
+                            <CardContent>
+                                <School fontSize="large" />
+                                <Typography variant="h6">Cursos</Typography>
                                 <Button
                                     variant="contained"
                                     component={Link}
                                     href="/admin/cursos"
-                                    fullWidth
-                                    sx={{ py: 1.5 }}
+                                    sx={{ mt: 1, width: '100%' }}
                                 >
                                     Gestionar Cursos
                                 </Button>
-                            </ListItem>
-                            <ListItem disablePadding>
                                 <Button
                                     variant="contained"
                                     component={Link}
                                     href="/admin/cursos/create"
-                                    fullWidth
-                                    sx={{ py: 1.5 }}
+                                    sx={{ mt: 1, width: '100%' }}
                                 >
                                     Crear Curso
                                 </Button>
-                            </ListItem>
-                        </List>
-                    </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-                    <Divider />
-
-                    <Box>
-                        <Typography variant="h5" gutterBottom>
-                            Configuraciones
-                        </Typography>
-                        <List>
-                            <ListItem disablePadding>
+                    {/* Configuraciones */}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Card variant="outlined" sx={{ textAlign: 'center', p: 2 }}>
+                            <CardContent>
+                                <Settings fontSize="large" />
+                                <Typography variant="h6">Configuraciones</Typography>
                                 <Button
                                     variant="contained"
                                     component={Link}
                                     href="/admin/settings"
-                                    fullWidth
-                                    sx={{ py: 1.5 }}
+                                    sx={{ mt: 1, width: '100%' }}
                                 >
                                     Configuraciones Generales
                                 </Button>
-                            </ListItem>
-                        </List>
-                    </Box>
-                </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    {/* Solicitudes y Noticias */}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Card variant="outlined" sx={{ textAlign: 'center', p: 2 }}>
+                            <CardContent>
+                                <Assignment fontSize="large" />
+                                <Typography variant="h6">Solicitudes y Noticias</Typography>
+                                <Button
+                                    variant="contained"
+                                    component={Link}
+                                    href="/admin/solicitudes"
+                                    sx={{ mt: 1, width: '100%' }}
+                                >
+                                    Gestionar Solicitudes
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    component={Link}
+                                    href="/admin/noticias"
+                                    sx={{ mt: 1, width: '100%' }}
+                                >
+                                    Gestionar Noticias
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
             </Paper>
         </Container>
     );
 };
 
 export default AdminDashboard;
-

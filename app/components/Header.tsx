@@ -24,9 +24,8 @@ export default function Header() {
       <nav className={styles.nav}>
         <div className={styles.logoContainer}>
           <Link href="/">
-            <img src="/images/isotipohb.svg" alt="Logo" className={styles.logoImage} />
+            <img src="/images/logo_blanco.png" alt="HumanBionics Logo" className={styles.logoImage} />
           </Link>
-          <span className={styles.companyName}>HumanBionics</span>
         </div>
         <ul className={styles.navLinks}>
           {isLoggedIn === null ? (

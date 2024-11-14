@@ -10,7 +10,6 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: 'Usuario no autenticado' }, { status: 401 });
     }
 
-    // Parsea el JSON para obtener el userId
     const userData = JSON.parse(userCookie);
     const userId = userData.id;
 
@@ -26,13 +25,11 @@ export async function GET(req: Request) {
                 nombre_certificado: true,
                 fecha_subida: true,
                 archivo_certificado: true,
-                usuario_sube_certificado: true, // Mantenemos esta línea para el usuario que subió el certificado
-                usuario: { // Incluimos la relación para obtener el usuario que solicitó
+                usuario: { // Agregar la relación de usuario para obtener el nombre
                     select: {
-                        id: true,
-                        username: true, // O cualquier otro campo que desees mostrar
-                    },
-                },
+                        username: true, // El nombre de usuario de quien hizo la solicitud
+                    }
+                }
             },
         });
 
@@ -40,5 +37,40 @@ export async function GET(req: Request) {
     } catch (error) {
         console.error('Error obteniendo certificados:', error);
         return NextResponse.json({ error: 'Error obteniendo certificados' }, { status: 500 });
+    }
+}
+
+export async function POST(req: Request) {
+    const cookieStore = cookies();
+    const userCookie = cookieStore.get('user')?.value;
+
+    if (!userCookie) {
+        return NextResponse.json({ error: 'Usuario no autenticado' }, { status: 401 });
+    }
+
+    const userData = JSON.parse(userCookie);
+    const userId = userData.id;
+
+    if (!userId) {
+        return NextResponse.json({ error: 'Usuario no autenticado' }, { status: 401 });
+    }
+
+    try {
+        const { nombre_certificado } = await req.json();
+
+        const solicitud = await prisma.certificados.create({
+            data: {
+                nombre_certificado,
+                userId,
+                fecha_subida: new Date(),  // Usa la fecha actual
+                archivo_certificado: "",   // Cadena vacía como marcador de posición
+                usuario_sube_certificado: "pendiente",  // Marca el estado de la solicitud
+            },
+        });
+
+        return NextResponse.json(solicitud, { status: 201 });
+    } catch (error) {
+        console.error('Error registrando la solicitud de certificado:', error);
+        return NextResponse.json({ error: 'Error al solicitar el certificado' }, { status: 500 });
     }
 }

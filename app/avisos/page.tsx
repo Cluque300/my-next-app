@@ -30,8 +30,7 @@ export default function Avisos() {
         const data = await response.json();
         setAvisos(data);
       } catch (error) {
-        if (error instanceof Error) setError(error.message);
-        else setError('Error desconocido');
+        setError(error instanceof Error ? error.message : 'Error desconocido');
       } finally {
         setLoading(false);
       }
@@ -42,14 +41,11 @@ export default function Avisos() {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`/api/autch/avisos/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(`/api/autch/avisos/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Error al eliminar el aviso');
       setAvisos(prevAvisos => prevAvisos.filter(aviso => aviso.id !== id));
     } catch (error) {
-      if (error instanceof Error) setError(error.message);
-      else setError('Error desconocido');
+      setError(error instanceof Error ? error.message : 'Error desconocido');
     }
   };
 
@@ -63,32 +59,43 @@ export default function Avisos() {
   }
 
   return (
-    <Container sx={{ marginTop: 4 }}>
+    <Container sx={{ marginTop: 5 }}>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
-        <Typography variant="h4" fontWeight="bold">
-          Mis Avisos
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          sx={{
+            color: '#1a73e8',
+            borderBottom: '3px solid #1a73e8',
+            paddingBottom: 0.5,
+          }}
+        >
+          📢 Mis Avisos
         </Typography>
         <Button
           variant="contained"
           component={Link}
           href="/avisos/create"
           sx={{
-            bgcolor: 'primary.main',
-            '&:hover': { bgcolor: 'primary.dark' },
+            bgcolor: '#1a73e8',
+            color: '#fff',
+            fontWeight: 'bold',
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+            '&:hover': { bgcolor: '#1664c0' },
           }}
         >
-          Crear Aviso
+          + Crear Aviso
         </Button>
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity="error" sx={{ mb: 3, fontSize: '0.9rem' }}>
           {error}
         </Alert>
       )}
 
       {avisos.length === 0 ? (
-        <Typography variant="body1" color="textSecondary" align="center">
+        <Typography variant="body1" color="textSecondary" align="center" sx={{ fontSize: '1.1rem', mt: 4 }}>
           No tienes avisos registrados.
         </Typography>
       ) : (

@@ -1,39 +1,31 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { Container, Typography, Card, CardContent, Button, CircularProgress, Box } from '@mui/material';
+import { Container, Typography, Card, CardContent, Button, CircularProgress, Box, Divider, Avatar, Grid } from '@mui/material';
 import axios from 'axios';
 
 interface SolicitudCertificado {
     id_certificado: number;
     nombre_certificado: string;
-    fecha_subida: string;
-    usuario: {
-        username: string; // Campo que incluye el nombre de usuario
-    };
     archivo_certificado: string | null;
+    usuario?: {
+        username: string;
+    };
 }
 
 export default function AdminCertificadosPage() {
-    const { userId } = useAuth();
     const [solicitudes, setSolicitudes] = useState<SolicitudCertificado[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchSolicitudes = async () => {
             try {
                 const response = await axios.get('/api/autch/certificados');
                 setSolicitudes(response.data);
-            } catch (error) {
-                console.error('Error obteniendo solicitudes de certificados:', error);
-                setError('Hubo un error al obtener las solicitudes. Inténtalo de nuevo más tarde.');
             } finally {
                 setLoading(false);
             }
         };
-
         fetchSolicitudes();
     }, []);
 
@@ -42,67 +34,86 @@ export default function AdminCertificadosPage() {
         formData.append('file', file);
         formData.append('id_certificado', solicitud.id_certificado.toString());
 
-        try {
-            await axios.post('/api/autch/admin/certificados', formData);
-            setSolicitudes((prev) => 
-                prev.map((s) => 
-                    s.id_certificado === solicitud.id_certificado 
-                        ? { ...s, archivo_certificado: `/uploads/certificados/${file.name}`, usuario_sube_certificado: 'ADMIN' } 
-                        : s
-                )
-            );
-        } catch (error) {
-            console.error('Error subiendo el certificado:', error);
-        }
+        await axios.post('/api/autch/admin/certificados', formData);
+        setSolicitudes((prev) =>
+            prev.map((s) =>
+                s.id_certificado === solicitud.id_certificado
+                    ? { ...s, archivo_certificado: `/uploads/certificados/${file.name}` }
+                    : s
+            )
+        );
     };
 
     if (loading) {
         return (
-            <Container maxWidth="md" sx={{ mt: 4 }}>
-                <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 4 }}>
-                    <CircularProgress />
-                </Box>
-            </Container>
-        );
-    }
-
-    if (error) {
-        return (
-            <Container maxWidth="md" sx={{ mt: 4 }}>
-                <Typography color="error" align="center">{error}</Typography>
+            <Container maxWidth="md" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+                <CircularProgress />
             </Container>
         );
     }
 
     return (
-        <Container maxWidth="md" sx={{ mt: 4 }}>
-            <Typography variant="h4" gutterBottom>Administrar Solicitudes de Certificados</Typography>
+        <Container maxWidth="md" sx={{ mt: 5 }}>
+            <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', color: 'primary.main', mb: 4 }}>
+                Administrar Solicitudes de Certificados
+            </Typography>
+            <Divider sx={{ mb: 4 }} />
+
             {solicitudes.length === 0 ? (
-                <Typography align="center">No hay solicitudes disponibles.</Typography>
+                <Typography align="center" color="textSecondary" variant="h6">
+                    No hay solicitudes disponibles.
+                </Typography>
             ) : (
-                solicitudes.map(solicitud => (
-                    <Card key={solicitud.id_certificado} sx={{ mb: 2 }}>
-                        <CardContent>
-                            <Typography variant="h6">{solicitud.nombre_certificado}</Typography>
-                            <Typography variant="body2">Solicitado por: {solicitud.usuario.username}</Typography> {/* Cambiado aquí */}
-                            <Typography variant="body2">Fecha de solicitud: {new Date(solicitud.fecha_subida).toLocaleDateString()}</Typography>
-                            {solicitud.archivo_certificado ? (
-                                <Button variant="contained" onClick={() => window.open(solicitud.archivo_certificado!, '_blank')}>
-                                    Descargar Certificado
-                                </Button>
-                            ) : (
-                                <Button variant="contained" component="label">
-                                    Subir Certificado
-                                    <input type="file" hidden onChange={(e) => {
-                                        if (e.target.files) {
-                                            handleUpload(solicitud, e.target.files[0]);
-                                        }
-                                    }} />
-                                </Button>
-                            )}
-                        </CardContent>
-                    </Card>
-                ))
+                <Grid container spacing={3}>
+                    {solicitudes.map(solicitud => (
+                        <Grid item xs={12} sm={6} key={solicitud.id_certificado}>
+                            <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: 3, borderRadius: 2 }}>
+                                <Avatar sx={{ width: 56, height: 56, mt: 2, bgcolor: 'primary.main' }}>
+                                    {solicitud.usuario?.username[0].toUpperCase()}
+                                </Avatar>
+                                <CardContent sx={{ textAlign: 'center', width: '100%' }}>
+                                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                                        {solicitud.nombre_certificado}
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+                                        Solicitado por: <strong>{solicitud.usuario?.username || 'Desconocido'}</strong>
+                                    </Typography>
+
+                                    <Box mt={2} display="flex" justifyContent="center">
+                                        {solicitud.archivo_certificado ? (
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                onClick={() => window.open(solicitud.archivo_certificado!, '_blank')}
+                                                sx={{ fontWeight: 'bold', width: '100%', maxWidth: 250 }}
+                                            >
+                                                Descargar
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant="contained"
+                                                component="label"
+                                                color="secondary"
+                                                sx={{ fontWeight: 'bold', py: 1, width: '100%', maxWidth: 250 }}
+                                            >
+                                                Subir Certificado
+                                                <input
+                                                    type="file"
+                                                    hidden
+                                                    onChange={(e) => {
+                                                        if (e.target.files) {
+                                                            handleUpload(solicitud, e.target.files[0]);
+                                                        }
+                                                    }}
+                                                />
+                                            </Button>
+                                        )}
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
             )}
         </Container>
     );

@@ -105,6 +105,9 @@ model Project {
 
   // Relación con ProjectUser
   projectUsers      ProjectUser[]   // Un proyecto puede tener múltiples usuarios
+
+  // Nueva relación con Calculadora
+  calculadoras       Calculadora[]    // Un proyecto puede tener múltiples entradas en la calculadora
 }
 
 model ProjectUser {
@@ -224,7 +227,7 @@ model Nominas {
   usuario_sube_nomina String    // Usuario que subió la nómina
   nombre_nomina      String     // Nombre de la nómina
   fecha_subida       DateTime  @default(now()) // Fecha de subida
-  archivo_nomina     String     // Ruta del archivo
+  archivo_nomina     String?     // Ruta del archivo
 
   // Relación con User
   usuario            User      @relation(fields: [userId], references: [id])
@@ -242,6 +245,22 @@ model Noticia {
   usuario            User      @relation(fields: [userId], references: [id])
 
   @@index([userId]) // Índice para consultas rápidas por usuario
+}
+
+model Calculadora {
+  id                Int      @id @default(autoincrement())
+  projectDuration   Int      // Duración del proyecto en días
+  adminCost         Float    // Costo administrativo
+  locativeCost      Float    // Costo locativo
+  machineryCost     Float    // Costo de maquinaria
+  materialCosts     Float    // Costo de materiales
+  otherCosts        Float    // Otros costos
+  totalCost         Float    // Costo total calculado
+  createdAt         DateTime @default(now()) // Fecha de creación
+
+  // Relación con el modelo Project
+  projectId         Int
+  project           Project   @relation(fields: [projectId], references: [id])
 }
 
 enum Role {

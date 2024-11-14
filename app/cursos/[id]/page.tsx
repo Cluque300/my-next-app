@@ -25,7 +25,10 @@ export default function CursoDetailPage({ params }: { params: { id: string } }) 
       const response = await fetch(`/api/autch/cursos/${params.id}`);
       if (response.ok) {
         const data = await response.json();
-        setCurso(data);
+        setCurso({
+          ...data,
+          inscrito: data.inscripcion.some((i: any) => i.userId === userId),
+        });
       } else {
         console.error('Error fetching curso data');
       }
@@ -33,7 +36,7 @@ export default function CursoDetailPage({ params }: { params: { id: string } }) 
     };
 
     fetchCurso();
-  }, [params.id]);
+  }, [params.id, userId]);
 
   const handleInscripcion = async () => {
     if (!userId) {
@@ -124,4 +127,3 @@ export default function CursoDetailPage({ params }: { params: { id: string } }) 
     </Container>
   );
 }
-

@@ -37,10 +37,7 @@ export default function CursosPage() {
 
       const cursosConInscripcion = await Promise.all(
         data.map(async (curso: Curso) => {
-          const inscripcionResponse = await fetch(`/api/autch/cursos/${curso.id}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          });
+          const inscripcionResponse = await fetch(`/api/autch/cursos/${curso.id}`);
           const inscripcionData = await inscripcionResponse.json();
           return {
             ...curso,
@@ -84,20 +81,30 @@ export default function CursosPage() {
                 <TableCell>{new Date(curso.fecha_inicio).toLocaleDateString()}</TableCell>
                 <TableCell>{new Date(curso.fecha_fin).toLocaleDateString()}</TableCell>
                 <TableCell>
-                  {curso.inscrito ? (
-                    <Button variant="contained" color="success" disabled>
-                      Inscrito
-                    </Button>
-                  ) : (
+                  <Box display="flex" gap={1}>
                     <Button
                       variant="contained"
                       color="primary"
                       component={Link}
                       href={`/cursos/${curso.id}`}
                     >
-                      Inscribirse
+                      Ver curso
                     </Button>
-                  )}
+                    {curso.inscrito ? (
+                      <Button variant="contained" color="success" disabled>
+                        Inscrito
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        component={Link}
+                        href={`/cursos/${curso.id}`}
+                      >
+                        Inscribirse
+                      </Button>
+                    )}
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}

@@ -5,17 +5,22 @@ import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
-// Directorio de almacenamiento para certificados
-const CERTIFICADOS_UPLOAD_DIR = path.join(process.cwd(), 'uploads/certificados');
+// Ruta completa para guardar archivos en 'public/uploads/certificados'
+const CERTIFICADOS_UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'certificados');
 
 export async function POST(req: Request) {
     try {
         const formData = await req.formData();
         const file = formData.get('file') as File;
-        const idCertificado = parseInt(formData.get('id_certificado') as string); // Obtenemos el id del certificado
+        const idCertificado = parseInt(formData.get('id_certificado') as string);
 
         if (!file || isNaN(idCertificado)) {
             return NextResponse.json({ error: 'Datos incompletos para subir el certificado.' }, { status: 400 });
+        }
+
+        // Verifica si la carpeta 'uploads/certificados' existe, y la crea si no
+        if (!fs.existsSync(CERTIFICADOS_UPLOAD_DIR)) {
+            fs.mkdirSync(CERTIFICADOS_UPLOAD_DIR, { recursive: true });
         }
 
         const fileName = `${uuidv4()}_${file.name}`;
@@ -24,12 +29,12 @@ export async function POST(req: Request) {
         const buffer = await file.arrayBuffer();
         fs.writeFileSync(filePath, Buffer.from(buffer));
 
-        // Actualizar la solicitud del certificado del usuario con el archivo subido
+        // Actualiza la base de datos con la ruta del archivo subido
         const certificado = await prisma.certificados.update({
-            where: { id_certificado: idCertificado }, // Usar id_certificado para actualizar
+            where: { id_certificado: idCertificado },
             data: {
                 archivo_certificado: `/uploads/certificados/${fileName}`,
-                usuario_sube_certificado: 'ADMIN', // O el nombre del admin que sube, si es necesario
+                usuario_sube_certificado: 'ADMIN',
             },
         });
 

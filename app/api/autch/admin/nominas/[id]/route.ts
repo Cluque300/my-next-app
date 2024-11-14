@@ -8,6 +8,7 @@ interface Params {
   id: string;
 }
 
+// Manejo del método GET para obtener los detalles de una nómina
 export async function GET(req: Request, { params }: { params: Params }) {
   const { id } = params;
 
@@ -28,6 +29,7 @@ export async function GET(req: Request, { params }: { params: Params }) {
   }
 }
 
+// Manejo del método POST para subir una nómina
 export async function POST(req: Request, { params }: { params: Params }) {
   const { id } = params;
   const body = await req.formData();
@@ -38,17 +40,22 @@ export async function POST(req: Request, { params }: { params: Params }) {
   }
 
   try {
+    // Directorio donde se almacenarán los archivos de las nóminas
     const uploadDir = path.join(process.cwd(), 'public/nominadocs');
     await fs.mkdir(uploadDir, { recursive: true });
 
+    // Generar un nombre único para el archivo
     const fileName = `${id}-${archivo_nomina.name}`;
     const uploadPath = path.join(uploadDir, fileName);
     const buffer = Buffer.from(await archivo_nomina.arrayBuffer());
+    
+    // Guardar el archivo en el servidor
     await fs.writeFile(uploadPath, buffer);
 
+    // Actualizar la base de datos con la ruta del archivo subido
     await prisma.nominas.update({
       where: { id_nomina: parseInt(id) },
-      data: { archivo_nomina: fileName }, // Guarda el nombre del archivo
+      data: { archivo_nomina: `/nominadocs/${fileName}` }, // Guardar la ruta del archivo
     });
 
     return NextResponse.json({ message: 'Archivo de nómina subido con éxito' }, { status: 200 });

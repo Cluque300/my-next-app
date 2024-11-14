@@ -3,18 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
   Typography,
   CircularProgress,
   Container,
   Box,
+  Grid,
 } from '@mui/material';
+import { BeachAccess, EventAvailable } from '@mui/icons-material';
 import { useAuth } from '@/context/AuthContext';
 
 interface Solicitud {
@@ -77,75 +76,88 @@ export default function CarteleraPage() {
 
   return (
     <Container maxWidth="md" sx={{ mt: 5, mb: 5 }}>
-      <Box mb={4}>
-        <Typography variant="h4" align="center" gutterBottom color="primary">
-          Mi Cartelera de Solicitudes
+      <Box mb={4} textAlign="center">
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            color: '#1976d2',
+            fontWeight: 'bold',
+            display: 'inline-block',
+            borderBottom: '3px solid #1976d2',
+            paddingBottom: 1,
+          }}
+        >
+          📋 Mi Cartelera de Solicitudes
         </Typography>
-        <Typography variant="body1" color="textSecondary" align="center">
-          Aquí puedes ver tus solicitudes registradas con el estado actual de cada una.
+        <Typography variant="body1" color="textSecondary">
+          Visualiza el estado de tus solicitudes recientes.
         </Typography>
       </Box>
+
       {solicitudes.length === 0 ? (
         <Typography align="center" sx={{ mt: 4 }} variant="h6" color="textSecondary">
           No tienes solicitudes registradas.
         </Typography>
       ) : (
-        <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
-          <Table>
-            <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
-              <TableRow>
-                <TableCell>
-                  <Typography variant="subtitle1" fontWeight="bold" color="primary">
-                    Tipo de Solicitud
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="subtitle1" fontWeight="bold" color="primary">
-                    Fecha de Creación
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="subtitle1" fontWeight="bold" color="primary">
-                    Estado
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {solicitudes.map((solicitud) => (
-                <TableRow
-                  key={solicitud.id}
-                  hover
-                  sx={{
-                    '&:nth-of-type(odd)': { backgroundColor: '#fafafa' },
-                  }}
-                >
-                  <TableCell>
-                    {solicitud.tipo_solicitud === 'vacaciones'
-                      ? `Vacaciones - ${solicitud.tipo_vacaciones || 'No especificado'}`
-                      : `Permiso - ${solicitud.motivo_permiso || 'No especificado'}`}
-                  </TableCell>
-                  <TableCell>{new Date(solicitud.createdAt).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <Typography
-                      sx={{
-                        color:
-                          solicitud.estado_solicitud === 'Aprobado'
-                            ? 'green'
-                            : solicitud.estado_solicitud === 'Pendiente'
-                            ? 'orange'
-                            : 'red',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {solicitud.estado_solicitud}
+        <Grid container spacing={3}>
+          {solicitudes.map((solicitud) => (
+            <Grid item xs={12} sm={6} key={solicitud.id}>
+              <Card
+                variant="outlined"
+                sx={{
+                  borderRadius: 3,
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                  transition: 'transform 0.3s ease',
+                  '&:hover': { transform: 'scale(1.03)' },
+                }}
+              >
+                <CardHeader
+                  avatar={
+                    solicitud.tipo_solicitud === 'vacaciones' ? (
+                      <BeachAccess color="primary" />
+                    ) : (
+                      <EventAvailable color="secondary" />
+                    )
+                  }
+                  title={
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#424242' }}>
+                      {solicitud.tipo_solicitud === 'vacaciones'
+                        ? `Vacaciones - ${solicitud.tipo_vacaciones || 'No especificado'}`
+                        : `Permiso - ${solicitud.motivo_permiso || 'No especificado'}`}
                     </Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                  }
+                  subheader={
+                    <Typography variant="body2" color="textSecondary">
+                      Creado el: {new Date(solicitud.createdAt).toLocaleDateString()}
+                    </Typography>
+                  }
+                />
+                <CardContent>
+                  <Box display="flex" alignItems="center" justifyContent="space-between">
+                    <Typography variant="body2" color="textSecondary">
+                      Estado:
+                    </Typography>
+                    <Chip
+                      label={solicitud.estado_solicitud}
+                      color={
+                        solicitud.estado_solicitud === 'Aprobado'
+                          ? 'success'
+                          : solicitud.estado_solicitud === 'Pendiente'
+                          ? 'warning'
+                          : 'error'
+                      }
+                      sx={{
+                        fontWeight: 'bold',
+                        fontSize: '0.9rem',
+                      }}
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       )}
     </Container>
   );

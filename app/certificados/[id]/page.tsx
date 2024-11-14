@@ -2,27 +2,27 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation'; // Importa useParams para obtener el ID directamente
+import { useParams } from 'next/navigation';
 import { Container, Typography, Card, CardContent, Button, CircularProgress, Box } from '@mui/material';
 import axios from 'axios';
 
 interface Certificado {
     id_certificado: number;
     nombre_certificado: string;
-    fecha_subida: string;
-    archivo_certificado: string;
+    fecha_subida: string | null;
+    archivo_certificado: string | null;
 }
 
 export default function CertificadoDetailPage() {
-    const params = useParams(); // Obtiene los parámetros de la URL
-    const { id } = params; // Extrae el ID de los parámetros
+    const params = useParams();
+    const { id } = params;
     const [certificado, setCertificado] = useState<Certificado | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchCertificado = async () => {
-            if (!id) return; // Asegúrate de que el ID esté disponible
+            if (!id) return;
 
             try {
                 const response = await axios.get(`/api/autch/certificados/${id}`);
@@ -73,11 +73,19 @@ export default function CertificadoDetailPage() {
                     <Typography variant="h4" gutterBottom>
                         {certificado.nombre_certificado}
                     </Typography>
-                    <Typography variant="body2">Fecha de subida: {new Date(certificado.fecha_subida).toLocaleDateString()}</Typography>
+                    <Typography variant="body2">
+                        Fecha de subida: {certificado.fecha_subida ? new Date(certificado.fecha_subida).toLocaleDateString() : 'Pendiente'}
+                    </Typography>
                     <Box mt={3}>
-                        <Button variant="contained" onClick={() => window.open(certificado.archivo_certificado, '_blank')}>
-                            Descargar Certificado
-                        </Button>
+                        {certificado.archivo_certificado ? (
+                            <Button variant="contained" onClick={() => window.open(certificado.archivo_certificado!, '_blank')}>
+                                Descargar Certificado
+                            </Button>
+                        ) : (
+                            <Typography variant="body2" color="textSecondary">
+                                Certificado pendiente, espera a que el administrador lo suba.
+                            </Typography>
+                        )}
                     </Box>
                 </CardContent>
             </Card>

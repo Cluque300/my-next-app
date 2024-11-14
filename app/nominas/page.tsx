@@ -1,76 +1,138 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Container, Typography, Grid, Card, CardContent, Button, CircularProgress, Box } from '@mui/material';
 import axios from 'axios';
+import Link from 'next/link';
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  CircularProgress,
+  Divider,
+} from '@mui/material';
+import { useAuth } from '@/context/AuthContext';
 
 interface Nomina {
-  id_nomina: number; 
+  id_nomina: number;
   nombre_nomina: string;
-  fecha_subida: string; 
-  archivo_nomina: string; 
+  archivo_nomina?: string;
 }
 
-export default function NominasPage() {
+const UserNominasPage = () => {
+  const { userId } = useAuth();
   const [nominas, setNominas] = useState<Nomina[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchNominas = async () => {
       try {
-        const response = await axios.get('/api/autch/nominas');
+        const response = await axios.get(`/api/autch/nominas`);
         setNominas(response.data);
       } catch (error) {
-        console.error('Error obteniendo nóminas:', error);
-        setError('Hubo un error al obtener las nóminas. Inténtalo de nuevo más tarde.');
+        console.error('Error fetching user nominas:', error);
+        setError('Error al cargar las nóminas.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchNominas();
-  }, []);
+  }, [userId]);
+
+  const handleRequestNomina = async () => {
+    try {
+      const response = await axios.post('/api/autch/nominas', {
+        userId,
+        nombre_nomina: "Nueva Nómina",
+      });
+      setNominas(prev => [...prev, response.data]);
+    } catch (error) {
+      console.error('Error al solicitar nómina:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Nóminas
-      </Typography>
-
-      {loading ? (
-        <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 4 }}>
-          <CircularProgress />
-        </Box>
-      ) : error ? (
-        <Typography color="error" align="center">
-          {error}
+    <Container maxWidth="md" sx={{ mt: 6 }}>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 3, boxShadow: 4 }}>
+        <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', color: 'primary.main', mb: 3 }}>
+          Mis Solicitudes de Nómina
         </Typography>
-      ) : nominas.length === 0 ? (
-        <Typography align="center">No hay nóminas disponibles.</Typography>
-      ) : (
-        <Grid container spacing={3}>
-          {nominas.map(nomina => (
-            <Grid item xs={12} key={nomina.id_nomina}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6">{nomina.nombre_nomina}</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    Fecha de subida: {new Date(nomina.fecha_subida).toLocaleDateString()}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    onClick={() => window.open(nomina.archivo_nomina, '_blank')}
-                    sx={{ mt: 2 }}
-                  >
-                    Descargar
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
+        <Divider sx={{ mb: 3 }} />
+        
+        <Box display="flex" justifyContent="center" mb={3}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleRequestNomina}
+            sx={{ fontWeight: 'bold', py: 1.5 }}
+          >
+            Solicitar Nueva Nómina
+          </Button>
+        </Box>
+
+        {error ? (
+          <Typography color="error" align="center" sx={{ mb: 3 }}>
+            {error}
+          </Typography>
+        ) : (
+          <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: 2 }}>
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: 'primary.main' }}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Nombre de Nómina</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Estado</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Acciones</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {nominas.map((nomina) => (
+                  <TableRow key={nomina.id_nomina} hover>
+                    <TableCell>{nomina.nombre_nomina}</TableCell>
+                    <TableCell>
+                      <Typography
+                        variant="body2"
+                        color={nomina.archivo_nomina ? 'success.main' : 'text.secondary'}
+                      >
+                        {nomina.archivo_nomina ? 'Descargar' : 'Pendiente'}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        component={Link}
+                        href={`/nominas/${nomina.id_nomina}`}
+                        variant="outlined"
+                        color="primary"
+                        sx={{ fontWeight: 'bold' }}
+                      >
+                        Ver Detalles
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Paper>
     </Container>
   );
-}
+};
+
+export default UserNominasPage;
