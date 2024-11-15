@@ -1,51 +1,48 @@
-"use client"; // Este archivo debe ser un componente de cliente
+"use client";
 
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 
-// Importa los iconos de Material UI
-import EventIcon from '@mui/icons-material/Event';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import WorkIcon from '@mui/icons-material/Work';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ContactsIcon from '@mui/icons-material/Contacts';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import AnnouncementIcon from '@mui/icons-material/Announcement';
-import BookIcon from '@mui/icons-material/Book';
+import EventIcon from "@mui/icons-material/Event";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import WorkIcon from "@mui/icons-material/Work";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ContactsIcon from "@mui/icons-material/Contacts";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import AnnouncementIcon from "@mui/icons-material/Announcement";
+import BookIcon from "@mui/icons-material/Book";
 
-// Importa los iconos de react-icons
-import { SiSlack } from 'react-icons/si';
-import { FaTrello, FaRegEnvelope, FaRegCalendarAlt, FaGithub } from 'react-icons/fa';
+import { SiSlack } from "react-icons/si";
+import { FaTrello, FaRegEnvelope, FaRegCalendarAlt, FaGithub } from "react-icons/fa";
 
-import styles from './drawer.module.css'; // Importar el módulo CSS
-import { useAuth } from '../context/AuthContext'; // Ajusta la ruta según tu estructura de carpetas
-import { useRouter } from 'next/navigation';
+import styles from "./drawer.module.css";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const drawerWidth = 240;
 
 interface Props {
   window?: () => Window;
-  children?: React.ReactNode; // Añadido para aceptar children
+  children?: React.ReactNode;
 }
 
 export default function ResponsiveDrawer(props: Props) {
-  const { window, children } = props; // Extraer children
+  const { window, children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
-  // Obtener la información del usuario desde el contexto
-  const { userId, userRole, userData, isLoggedIn } = useAuth(); // Ajustar para obtener datos del usuario
-  const router = useRouter(); // Inicializamos el hook useRouter para la navegación
+  const { userId, userRole, userData } = useAuth();
+  const router = useRouter();
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -62,42 +59,8 @@ export default function ResponsiveDrawer(props: Props) {
     }
   };
 
-  const handleProfileRedirect = () => {
-    if (userId) {
-      router.push(`/users/${userId}`); // Redirigir a la página de perfil del usuario
-    }
-  };
-
-  const handleAvisosRedirect = () => {
-    router.push('/avisos'); // Redirigir a la página de Avisos
-  };
-
-  const handleCalendarioRedirect = () => {
-    router.push('/calendario'); // Redirigir a la página de Mi Calendario
-  };
-
-  const handleCarteleraRedirect = () => {
-    router.push('/cartelera'); // Redirigir a la página de Mi Cartelera
-  };
-
-  const handleProyectosRedirect = () => {
-    router.push('/proyectos'); // Redirigir a la página de Mis Proyectos
-  };
-
-  const handleCursosRedirect = () => {
-    router.push('/cursos'); // Redirigir a la página de Cursos
-  };
-
-  const handleNominasCertificadosRedirect = () => {
-    router.push('/nominas_certificados'); // Redirigir a la página de Nómina/Certificados
-  };
-
-  const handleListaDeContactosRedirect = () => {
-    router.push('/users'); // Redirigir a la página de Lista de Contactos
-  };
-
-  const handleNoticiasRedirect = () => {
-    router.push('/noticias'); // Redirigir a la página de Noticias
+  const handleRedirect = (path: string) => {
+    router.push(path);
   };
 
   const drawer = (
@@ -105,18 +68,28 @@ export default function ResponsiveDrawer(props: Props) {
       {/* Sección de usuario */}
       <Box className={styles.userSection}>
         <img
-          src={userData?.foto || "URL_DE_TU_IMAGEN_DE_PERFIL"} // URL de la imagen de perfil, usar la del contexto
+          src={userData?.foto || "URL_DE_TU_IMAGEN_DE_PERFIL"}
           alt="Perfil"
           className={styles.profileImage}
         />
-        <Box className={styles.userName}>{userData?.fullname || 'Nombre Apellido'}</Box> {/* Mostrar nombre */}
-        <Box className={styles.userRole}>{userRole || 'Rol del Usuario'}</Box> {/* Mostrar rol */}
+        <Box className={styles.userName}>{userData?.fullname || "Nombre Apellido"}</Box>
+        <Box className={styles.userRole}>{userRole || "Rol del Usuario"}</Box>
         <Box className={styles.iconContainer}>
-          <IconButton aria-label="Trello"><FaTrello /></IconButton>
-          <IconButton aria-label="Slack"><SiSlack /></IconButton>
-          <IconButton aria-label="Correo"><FaRegEnvelope /></IconButton>
-          <IconButton aria-label="Reuniones"><FaRegCalendarAlt /></IconButton>
-          <IconButton aria-label="GitHub"><FaGithub /></IconButton>
+          <IconButton aria-label="Trello">
+            <FaTrello />
+          </IconButton>
+          <IconButton aria-label="Slack">
+            <SiSlack />
+          </IconButton>
+          <IconButton aria-label="Correo">
+            <FaRegEnvelope />
+          </IconButton>
+          <IconButton aria-label="Reuniones">
+            <FaRegCalendarAlt />
+          </IconButton>
+          <IconButton aria-label="GitHub">
+            <FaGithub />
+          </IconButton>
         </Box>
       </Box>
       <Divider />
@@ -125,60 +98,117 @@ export default function ResponsiveDrawer(props: Props) {
         <ListItem>
           <ListItemText primary="Cartelera" />
         </ListItem>
-        <ListItemButton onClick={handleCarteleraRedirect}>
-          <ListItemIcon><NotificationsIcon /></ListItemIcon>
+        <ListItemButton
+          onClick={() => handleRedirect("/cartelera")}
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
+          <ListItemIcon>
+            <NotificationsIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Mi Cartelera" />
         </ListItemButton>
-        <ListItemButton onClick={handleAvisosRedirect}>
-          <ListItemIcon><AnnouncementIcon /></ListItemIcon>
+        <ListItemButton
+          onClick={() => handleRedirect("/avisos")}
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
+          <ListItemIcon>
+            <AnnouncementIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Avisos" />
         </ListItemButton>
-        <ListItemButton onClick={handleCursosRedirect}>
-          <ListItemIcon><BookIcon /></ListItemIcon>
+        <ListItemButton
+          onClick={() => handleRedirect("/cursos")}
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
+          <ListItemIcon>
+            <BookIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Cursos" />
         </ListItemButton>
-        <ListItemButton onClick={handleNoticiasRedirect}> {/* Botón de Noticias */}
-          <ListItemIcon><AnnouncementIcon /></ListItemIcon>
+        <ListItemButton
+          onClick={() => handleRedirect("/noticias")}
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
+          <ListItemIcon>
+            <AnnouncementIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Noticias" />
         </ListItemButton>
-
         <Divider />
-
-        {/* Sección Aplicaciones */}
+        {/* Aplicaciones */}
         <ListItem>
           <ListItemText primary="Aplicaciones" />
         </ListItem>
-        <ListItemButton onClick={handleCalendarioRedirect}>
-          <ListItemIcon><EventIcon /></ListItemIcon>
+        <ListItemButton
+          onClick={() => handleRedirect("/calendario")}
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
+          <ListItemIcon>
+            <EventIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Mi Calendario" />
         </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon><AssignmentIcon /></ListItemIcon>
+        <ListItemButton sx={{ fontSize: "0.8rem", padding: "6px 12px" }}>
+          <ListItemIcon>
+            <AssignmentIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Mis Tareas" />
         </ListItemButton>
-        <ListItemButton onClick={handleProyectosRedirect}>
-          <ListItemIcon><WorkIcon /></ListItemIcon>
+        <ListItemButton
+          onClick={() => handleRedirect("/proyectos")}
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
+          <ListItemIcon>
+            <WorkIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Mis Proyectos" />
         </ListItemButton>
-        <ListItemButton onClick={handleNominasCertificadosRedirect}>
-          <ListItemIcon><AttachMoneyIcon /></ListItemIcon>
+        <ListItemButton
+          onClick={() => handleRedirect("/nominas_certificados")}
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
+          <ListItemIcon>
+            <AttachMoneyIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Nómina/Certificados" />
         </ListItemButton>
-
         <Divider />
-
-        {/* Sección Usuarios */}
+        {/* Usuarios */}
         <ListItem>
           <ListItemText primary="Usuarios" />
         </ListItem>
-        <ListItemButton onClick={handleProfileRedirect}>
-          <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+        <ListItemButton
+          onClick={() => handleRedirect(`/users/${userId}`)}
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
+          <ListItemIcon>
+            <AccountCircleIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Mi Perfil" />
         </ListItemButton>
-        <ListItemButton onClick={handleListaDeContactosRedirect}>
-          <ListItemIcon><ContactsIcon /></ListItemIcon>
+        <ListItemButton
+          onClick={() => handleRedirect("/users")}
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
+          <ListItemIcon>
+            <ContactsIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText primary="Lista de Contactos" />
         </ListItemButton>
+        {userRole === "ADMIN" && (
+          <>
+            <Divider />
+            <ListItemButton
+              onClick={() => handleRedirect("/admin")}
+              sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+            >
+              <ListItemIcon>
+                <WorkIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Administración" />
+            </ListItemButton>
+          </>
+        )}
       </List>
     </div>
   );
@@ -186,14 +216,14 @@ export default function ResponsiveDrawer(props: Props) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <Box
         component="nav"
         sx={{
           width: { sm: drawerWidth },
           flexShrink: { sm: 0 },
-          height: `calc(100vh - 73.5px)`, // Ajuste para ocupar el espacio restante
+          height: `calc(100vh - 73.5px)`,
         }}
         aria-label="mailbox folders"
       >
@@ -204,15 +234,15 @@ export default function ResponsiveDrawer(props: Props) {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Mejor rendimiento en dispositivos móviles.
+            keepMounted: true,
           }}
           sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
               width: drawerWidth,
-              height: `calc(100vh - 73.5px)`, // Altura ajustada
-              top: '73.5px', // Alineado con el header
+              height: `calc(100vh - 73.5px)`,
+              top: "73.5px",
             },
           }}
         >
@@ -221,12 +251,12 @@ export default function ResponsiveDrawer(props: Props) {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
+            display: { xs: "none", sm: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
               width: drawerWidth,
-              height: `calc(100vh - 73.5px)`, // Altura ajustada
-              top: '73.5px', // Alineado con el header
+              height: `calc(100vh - 73.5px)`,
+              top: "73.5px",
             },
           }}
           open
@@ -242,7 +272,7 @@ export default function ResponsiveDrawer(props: Props) {
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
-        {children} {/* Aquí se renderizan los children */}
+        {children}
       </Box>
     </Box>
   );
