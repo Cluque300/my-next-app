@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+"use client";
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const EditEventPage = () => {
   const router = useRouter();

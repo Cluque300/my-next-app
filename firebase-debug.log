@@ -1,0 +1,283 @@
+[debug] [2024-11-18T16:28:49.456Z] ----------------------------------------------------------------------
+[debug] [2024-11-18T16:28:49.462Z] Command:       D:\appdata\node.exe D:\appdata\npm-global\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2024-11-18T16:28:49.463Z] CLI Version:   13.13.3
+[debug] [2024-11-18T16:28:49.463Z] Platform:      win32
+[debug] [2024-11-18T16:28:49.464Z] Node Version:  v20.15.1
+[debug] [2024-11-18T16:28:49.464Z] Time:          Mon Nov 18 2024 11:28:49 GMT-0500 (hora estándar de Colombia)
+[debug] [2024-11-18T16:28:49.465Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-18T16:28:49.888Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-18T16:28:49.889Z] > authorizing via signed-in user (carlosluque@humanbionics.com.co)
+[debug] [2024-11-18T16:28:49.889Z] [iam] checking project intranethb-3052a for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-11-18T16:28:49.892Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions [none]
+[debug] [2024-11-18T16:28:49.892Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions x-goog-quota-user=projects/intranethb-3052a
+[debug] [2024-11-18T16:28:49.893Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-18T16:28:50.437Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions 200
+[debug] [2024-11-18T16:28:50.437Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-18T16:28:50.438Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a [none]
+[debug] [2024-11-18T16:28:50.798Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a 200
+[debug] [2024-11-18T16:28:50.798Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a {"projectId":"intranethb-3052a","projectNumber":"714687752392","displayName":"IntranetHB","name":"projects/intranethb-3052a","resources":{"hostingSite":"intranethb-3052a"},"state":"ACTIVE","etag":"1_1ef3fcba-c7ea-4111-8451-f06cf2555b74"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 14.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-11-18T16:29:04.422Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/intranethb-3052a/sites/intranethb-3052a [none]
+[debug] [2024-11-18T16:29:05.376Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/intranethb-3052a/sites/intranethb-3052a 200
+[debug] [2024-11-18T16:29:05.376Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/intranethb-3052a/sites/intranethb-3052a {"name":"projects/intranethb-3052a/sites/intranethb-3052a","defaultUrl":"https://intranethb-3052a.web.app","type":"DEFAULT_SITE"}
+[info]   ▲ Next.js 14.2.13
+
+[info]   - Environments: .env
+
+
+[info]    Creating an optimized production build ...
+
+[info] Failed to compile.
+
+
+[info] ./app/calendario/edit/[id]/page.tsx
+Error: 
+  x You're importing a component that needs useEffect. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  | Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  | 
+  | 
+   ,-[D:\proyectos_app\my-next-app\app\calendario\edit\[id]\page.tsx:1:1]
+ 1 | import { useEffect, useState } from 'react';
+   :          ^^^^^^^^^
+ 2 | import { useRouter } from 'next/router';
+ 3 | 
+ 3 | const EditEventPage = () => {
+   `----
+
+  x You're importing a component that needs useState. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  | Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  | 
+  | 
+   ,-[D:\proyectos_app\my-next-app\app\calendario\edit\[id]\page.tsx:1:1]
+ 1 | import { useEffect, useState } from 'react';
+   :                     ^^^^^^^^
+ 2 | import { useRouter } from 'next/router';
+ 3 | 
+ 3 | const EditEventPage = () => {
+   `----
+
+  x You have a Server Component that imports next/router. Use next/navigation instead.\nLearn more: https://nextjs.org/docs/app/api-reference/functions/use-router
+   ,-[D:\proyectos_app\my-next-app\app\calendario\edit\[id]\page.tsx:1:1]
+ 1 | import { useEffect, useState } from 'react';
+ 2 | import { useRouter } from 'next/router';
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | 
+ 4 | const EditEventPage = () => {
+ 4 |   const router = useRouter();
+   `----
+
+Import trace for requested module:
+./app/calendario/edit/[id]/page.tsx
+
+
+[info] 
+> Build failed because of webpack errors
+
+[debug] [2024-11-18T16:29:34.692Z] Error: ENOENT: no such file or directory, open 'D:\proyectos_app\my-next-app\.next\export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2024-11-18T16:30:54.076Z] ----------------------------------------------------------------------
+[debug] [2024-11-18T16:30:54.082Z] Command:       D:\appdata\node.exe D:\appdata\npm-global\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2024-11-18T16:30:54.083Z] CLI Version:   13.13.3
+[debug] [2024-11-18T16:30:54.084Z] Platform:      win32
+[debug] [2024-11-18T16:30:54.084Z] Node Version:  v20.15.1
+[debug] [2024-11-18T16:30:54.084Z] Time:          Mon Nov 18 2024 11:30:54 GMT-0500 (hora estándar de Colombia)
+[debug] [2024-11-18T16:30:54.085Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-18T16:30:54.214Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-18T16:30:54.215Z] > authorizing via signed-in user (carlosluque@humanbionics.com.co)
+[debug] [2024-11-18T16:30:54.215Z] [iam] checking project intranethb-3052a for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-11-18T16:30:54.219Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions [none]
+[debug] [2024-11-18T16:30:54.219Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions x-goog-quota-user=projects/intranethb-3052a
+[debug] [2024-11-18T16:30:54.219Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-18T16:30:54.866Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions 200
+[debug] [2024-11-18T16:30:54.866Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-18T16:30:54.868Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a [none]
+[debug] [2024-11-18T16:30:55.431Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a 200
+[debug] [2024-11-18T16:30:55.431Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a {"projectId":"intranethb-3052a","projectNumber":"714687752392","displayName":"IntranetHB","name":"projects/intranethb-3052a","resources":{"hostingSite":"intranethb-3052a"},"state":"ACTIVE","etag":"1_1ef3fcba-c7ea-4111-8451-f06cf2555b74"}
+[debug] [2024-11-18T16:31:16.204Z] ----------------------------------------------------------------------
+[debug] [2024-11-18T16:31:16.207Z] Command:       D:\appdata\node.exe D:\appdata\npm-global\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2024-11-18T16:31:16.208Z] CLI Version:   13.13.3
+[debug] [2024-11-18T16:31:16.208Z] Platform:      win32
+[debug] [2024-11-18T16:31:16.209Z] Node Version:  v20.15.1
+[debug] [2024-11-18T16:31:16.209Z] Time:          Mon Nov 18 2024 11:31:16 GMT-0500 (hora estándar de Colombia)
+[debug] [2024-11-18T16:31:16.209Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-18T16:31:16.328Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-18T16:31:16.328Z] > authorizing via signed-in user (carlosluque@humanbionics.com.co)
+[debug] [2024-11-18T16:31:16.329Z] [iam] checking project intranethb-3052a for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-11-18T16:31:16.332Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions [none]
+[debug] [2024-11-18T16:31:16.332Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions x-goog-quota-user=projects/intranethb-3052a
+[debug] [2024-11-18T16:31:16.332Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-18T16:31:16.871Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions 200
+[debug] [2024-11-18T16:31:16.871Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-18T16:31:16.872Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a [none]
+[debug] [2024-11-18T16:31:17.165Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a 200
+[debug] [2024-11-18T16:31:17.165Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a {"projectId":"intranethb-3052a","projectNumber":"714687752392","displayName":"IntranetHB","name":"projects/intranethb-3052a","resources":{"hostingSite":"intranethb-3052a"},"state":"ACTIVE","etag":"1_1ef3fcba-c7ea-4111-8451-f06cf2555b74"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 14.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-11-18T16:31:30.823Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/intranethb-3052a/sites/intranethb-3052a [none]
+[debug] [2024-11-18T16:31:31.647Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/intranethb-3052a/sites/intranethb-3052a 200
+[debug] [2024-11-18T16:31:31.647Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/intranethb-3052a/sites/intranethb-3052a {"name":"projects/intranethb-3052a/sites/intranethb-3052a","defaultUrl":"https://intranethb-3052a.web.app","type":"DEFAULT_SITE"}
+[info]   ▲ Next.js 14.2.13
+
+[info]   - Environments: .env
+
+
+[info]    Creating an optimized production build ...
+
+[info] Failed to compile.
+
+
+[info] ./app/calendario/edit/[id]/page.tsx
+Error: 
+  x You have a Server Component that imports next/router. Use next/navigation instead.\nLearn more: https://nextjs.org/docs/app/api-reference/functions/use-router
+   ,-[D:\proyectos_app\my-next-app\app\calendario\edit\[id]\page.tsx:1:1]
+ 1 | import { useRouter } from 'next/router';
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 2 | import { useEffect, useState } from 'react';
+ 3 | 
+ 3 | const EditEventPage = () => {
+   `----
+
+  x You're importing a component that needs useEffect. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  | Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  | 
+  | 
+   ,-[D:\proyectos_app\my-next-app\app\calendario\edit\[id]\page.tsx:1:1]
+ 1 | import { useRouter } from 'next/router';
+ 2 | import { useEffect, useState } from 'react';
+   :          ^^^^^^^^^
+ 3 | 
+ 4 | const EditEventPage = () => {
+ 4 |   const router = useRouter();
+   `----
+
+  x You're importing a component that needs useState. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  | Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  | 
+  | 
+   ,-[D:\proyectos_app\my-next-app\app\calendario\edit\[id]\page.tsx:1:1]
+ 1 | import { useRouter } from 'next/router';
+ 2 | import { useEffect, useState } from 'react';
+   :                     ^^^^^^^^
+ 3 | 
+ 4 | const EditEventPage = () => {
+ 4 |   const router = useRouter();
+   `----
+
+Import trace for requested module:
+./app/calendario/edit/[id]/page.tsx
+
+
+[info] 
+> Build failed because of webpack errors
+
+[debug] [2024-11-18T16:31:45.445Z] Error: ENOENT: no such file or directory, open 'D:\proyectos_app\my-next-app\.next\export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2024-11-18T16:36:08.082Z] ----------------------------------------------------------------------
+[debug] [2024-11-18T16:36:08.086Z] Command:       D:\appdata\node.exe D:\appdata\npm-global\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2024-11-18T16:36:08.087Z] CLI Version:   13.13.3
+[debug] [2024-11-18T16:36:08.087Z] Platform:      win32
+[debug] [2024-11-18T16:36:08.087Z] Node Version:  v20.15.1
+[debug] [2024-11-18T16:36:08.087Z] Time:          Mon Nov 18 2024 11:36:08 GMT-0500 (hora estándar de Colombia)
+[debug] [2024-11-18T16:36:08.088Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-18T16:36:08.203Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-18T16:36:08.203Z] > authorizing via signed-in user (carlosluque@humanbionics.com.co)
+[debug] [2024-11-18T16:36:08.203Z] [iam] checking project intranethb-3052a for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-11-18T16:36:08.207Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions [none]
+[debug] [2024-11-18T16:36:08.207Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions x-goog-quota-user=projects/intranethb-3052a
+[debug] [2024-11-18T16:36:08.207Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-18T16:36:08.897Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions 200
+[debug] [2024-11-18T16:36:08.898Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intranethb-3052a:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-18T16:36:08.899Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a [none]
+[debug] [2024-11-18T16:36:09.440Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a 200
+[debug] [2024-11-18T16:36:09.440Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/intranethb-3052a {"projectId":"intranethb-3052a","projectNumber":"714687752392","displayName":"IntranetHB","name":"projects/intranethb-3052a","resources":{"hostingSite":"intranethb-3052a"},"state":"ACTIVE","etag":"1_1ef3fcba-c7ea-4111-8451-f06cf2555b74"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 14.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-11-18T16:36:22.983Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/intranethb-3052a/sites/intranethb-3052a [none]
+[debug] [2024-11-18T16:36:23.729Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/intranethb-3052a/sites/intranethb-3052a 200
+[debug] [2024-11-18T16:36:23.730Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/intranethb-3052a/sites/intranethb-3052a {"name":"projects/intranethb-3052a/sites/intranethb-3052a","defaultUrl":"https://intranethb-3052a.web.app","type":"DEFAULT_SITE"}
+[info]   ▲ Next.js 14.2.13
+
+[info]   - Environments: .env
+
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info] 
+Failed to compile.
+
+[info] 
+./app/about/page.tsx
+9:7  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+11:35  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+11:50  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./app/admin/users/[id]/page.tsx
+41:7  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/components/Header.tsx
+27:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/components/ResponsiveDrawer.tsx
+70:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/forgot-password/page.tsx
+37:7  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/inventario/[id]/page.tsx
+84:41  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/login/page.tsx
+10:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/profile/[id]/page.tsx
+34:7  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/proyectos/page.tsx
+90:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/users/[id]/edit/page.tsx
+195:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+
+[debug] [2024-11-18T16:37:13.197Z] Error: ENOENT: no such file or directory, open 'D:\proyectos_app\my-next-app\.next\export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
