@@ -34,30 +34,13 @@ const drawerWidth = 240;
 interface Props {
   window?: () => Window;
   children?: React.ReactNode;
+  mobileOpen: boolean; // Estado externo para abrir/cerrar el Drawer en móviles
+  onDrawerToggle: () => void; // Función para manejar el toggle desde fuera
 }
 
-export default function ResponsiveDrawer(props: Props) {
-  const { window, children } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
-
+export default function ResponsiveDrawer({ window, children, mobileOpen, onDrawerToggle }: Props) {
   const { userId, userRole, userData } = useAuth();
   const router = useRouter();
-
-  const handleDrawerClose = () => {
-    setIsClosing(true);
-    setMobileOpen(false);
-  };
-
-  const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
-
-  const handleDrawerToggle = () => {
-    if (!isClosing) {
-      setMobileOpen(!mobileOpen);
-    }
-  };
 
   const handleRedirect = (path: string) => {
     router.push(path);
@@ -231,8 +214,7 @@ export default function ResponsiveDrawer(props: Props) {
           container={container}
           variant="temporary"
           open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
+          onClose={onDrawerToggle}
           ModalProps={{
             keepMounted: true,
           }}

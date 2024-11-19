@@ -1,7 +1,7 @@
 // app/components/AvisoCard.tsx
-import React from 'react';
-import { Card, CardContent, Typography, IconButton, Box } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import React from "react";
+import { Card, CardContent, Typography, IconButton, Box } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface AvisoCardProps {
   description: string;
@@ -14,33 +14,49 @@ const AvisoCard: React.FC<AvisoCardProps> = ({ description, date, onDelete }) =>
     <Card
       variant="outlined"
       sx={{
-        position: 'relative',
+        position: "relative",
         borderRadius: 2,
-        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-        '&:hover': {
-          transform: 'scale(1.03)',
-          boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.15)',
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+        "&:hover": {
+          transform: "scale(1.03)",
+          boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.15)",
         },
       }}
     >
       <CardContent>
         <Box mb={1}>
-          <Typography variant="h6" fontWeight="bold" component="div" sx={{ color: '#333' }}>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            component="div"
+            sx={{
+              color: "#333",
+              fontSize: { xs: "1rem", md: "1.2rem" },
+              textAlign: "center",
+            }}
+          >
             {description}
           </Typography>
-          <Typography variant="body2" color="textSecondary">
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            sx={{
+              fontSize: { xs: "0.8rem", md: "1rem" },
+              textAlign: "center",
+            }}
+          >
             {new Date(date).toLocaleDateString()}
           </Typography>
         </Box>
         <IconButton
           onClick={onDelete}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             top: 8,
             right: 8,
-            bgcolor: 'rgba(255, 0, 0, 0.1)',
-            '&:hover': { bgcolor: 'rgba(255, 0, 0, 0.2)' },
+            bgcolor: "rgba(255, 0, 0, 0.1)",
+            "&:hover": { bgcolor: "rgba(255, 0, 0, 0.2)" },
           }}
           aria-label="delete"
         >
@@ -52,3 +68,4 @@ const AvisoCard: React.FC<AvisoCardProps> = ({ description, date, onDelete }) =>
 };
 
 export default AvisoCard;
+

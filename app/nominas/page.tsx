@@ -71,24 +71,37 @@ const UserNominasPage = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 6 }}>
       <Paper elevation={3} sx={{ p: 4, borderRadius: 3, boxShadow: 4 }}>
-        <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', color: 'primary.main', mb: 3 }}>
+        <Typography
+          variant="h4"
+          align="center"
+          sx={{
+            fontWeight: 'bold',
+            color: 'primary.main',
+            mb: 3,
+            fontSize: { xs: '1.8rem', sm: '2rem' },
+          }}
+        >
           Mis Solicitudes de Nómina
         </Typography>
         <Divider sx={{ mb: 3 }} />
-        
+
         <Box display="flex" justifyContent="center" mb={3}>
           <Button
             variant="contained"
             color="primary"
             onClick={handleRequestNomina}
-            sx={{ fontWeight: 'bold', py: 1.5 }}
+            sx={{
+              fontWeight: 'bold',
+              py: 1.5,
+              fontSize: { xs: '0.8rem', sm: '1rem' },
+            }}
           >
             Solicitar Nueva Nómina
           </Button>
         </Box>
 
         {error ? (
-          <Typography color="error" align="center" sx={{ mb: 3 }}>
+          <Typography color="error" align="center" sx={{ mb: 3, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
             {error}
           </Typography>
         ) : (
@@ -96,19 +109,30 @@ const UserNominasPage = () => {
             <Table>
               <TableHead>
                 <TableRow sx={{ backgroundColor: 'primary.main' }}>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Nombre de Nómina</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Estado</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Acciones</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '1rem' } }}>
+                    Nombre de Nómina
+                  </TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '1rem' } }}>
+                    Estado
+                  </TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '1rem' } }}>
+                    Acciones
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {nominas.map((nomina) => (
                   <TableRow key={nomina.id_nomina} hover>
-                    <TableCell>{nomina.nombre_nomina}</TableCell>
+                    <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '1rem' } }}>
+                      {nomina.nombre_nomina}
+                    </TableCell>
                     <TableCell>
                       <Typography
                         variant="body2"
-                        color={nomina.archivo_nomina ? 'success.main' : 'text.secondary'}
+                        sx={{
+                          fontSize: { xs: '0.75rem', sm: '0.9rem' },
+                          color: nomina.archivo_nomina ? 'success.main' : 'text.secondary',
+                        }}
                       >
                         {nomina.archivo_nomina ? 'Descargar' : 'Pendiente'}
                       </Typography>
@@ -119,7 +143,11 @@ const UserNominasPage = () => {
                         href={`/nominas/${nomina.id_nomina}`}
                         variant="outlined"
                         color="primary"
-                        sx={{ fontWeight: 'bold' }}
+                        sx={{
+                          fontWeight: 'bold',
+                          fontSize: { xs: '0.75rem', sm: '0.9rem' },
+                          py: 0.8,
+                        }}
                       >
                         Ver Detalles
                       </Button>
