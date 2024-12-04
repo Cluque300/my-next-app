@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+   relationMode = "foreignKeys"
 }
 
 
@@ -57,6 +57,23 @@ model User {
 
   // Relación con Noticia
   noticias                  Noticia[]               // Un usuario puede crear múltiples noticias
+
+  // Relación con Tablero (como propietario)
+  tableros                  Tablero[]               // Un usuario puede ser propietario de múltiples tableros
+
+  // Relación con TableroUsuario (como colaborador)
+  tablerosColaboradores     TableroUsuario[]        // Un usuario puede colaborar en múltiples tableros
+
+  // Relación con Tarjeta (como usuario asignado)
+  tarjetasAsignadas         Tarjeta[]               // Un usuario puede estar asignado a múltiples tarjetas
+
+  // Relación con Etiquetas (opcional)
+  etiquetasCreadas          Etiqueta[]              // Un usuario puede crear múltiples etiquetas (opcional)
+
+  subtareas                 Subtarea[]              // Un usuario puede estar asociado a múltiples subtareas
+  notificaciones            Notificacion[]          // Un usuario puede recibir múltiples notificaciones
+  comentarios               Comentario[]            // Un usuario puede hacer múltiples comentarios
+
 }
 
 model Aviso {
@@ -263,6 +280,134 @@ model Calculadora {
   // Relación con el modelo Project
   projectId         Int
   project           Project   @relation(fields: [projectId], references: [id])
+}
+
+model Tablero {
+  id          Int             @id @default(autoincrement())
+  titulo      String           // Nombre del tablero
+  descripcion String?          // Descripción del tablero
+  estado      String           @default("activo") // Estado: activo, archivado
+  visibilidad String           @default("privado") // Visibilidad: privado, público
+  createdAt   DateTime         @default(now()) // Fecha de creación
+  updatedAt   DateTime         @updatedAt      // Fecha de última actualización
+
+  // Relación con el propietario
+  userId      Int
+  propietario User             @relation(fields: [userId], references: [id])
+
+  // Relación con las listas
+  listas      Lista[]          // Un tablero puede tener múltiples listas
+
+  // Relación con usuarios (tabla intermedia)
+  usuarios    TableroUsuario[] // Relación con múltiples usuarios
+}
+
+model Lista {
+  id          Int       @id @default(autoincrement())
+  titulo      String    // Título de la lista
+  posicion    Int       // Posición de la lista en el tablero
+  estado      String    @default("activo") // Estado de la lista: activo, archivado
+  tableroId   Int       // Foreign key al tablero
+  tablero     Tablero   @relation(fields: [tableroId], references: [id]) // Relación con el tablero
+
+  // Relación con las tarjetas
+  tarjetas    Tarjeta[] // Una lista puede tener múltiples tarjetas
+}
+
+model Tarjeta {
+  id          Int       @id @default(autoincrement())
+  titulo      String    // Título de la tarjeta
+  descripcion String?   // Descripción de la tarjeta
+  posicion    Int       // Posición de la tarjeta en la lista
+  estado      String    @default("pendiente") // Estado: pendiente, en progreso, completado
+  dueDate     DateTime? // Fecha de vencimiento
+  attachments Json?     // Archivos o imágenes relacionadas
+  listaId     Int       // Foreign key a la lista
+  lista       Lista     @relation(fields: [listaId], references: [id]) // Relación con la lista
+
+  // Relación con un usuario asignado
+  userId      Int?
+  usuario     User?     @relation(fields: [userId], references: [id]) // Usuario asignado (opcional)
+
+  // Relación con etiquetas
+  etiquetas   Etiqueta[] @relation("TarjetaEtiquetas") // Relación con múltiples etiquetas
+
+  subtareas   Subtarea[]    // Relación con múltiples subtareas
+  comentarios Comentario[]  // Relación con múltiples comentarios
+  adjuntos    Adjunto[]  // Relación con los adjuntos
+
+  createdAt   DateTime  @default(now()) // Fecha de creación
+  updatedAt   DateTime  @updatedAt      // Fecha de última actualización
+}
+
+model Etiqueta {
+  id          Int       @id @default(autoincrement())
+  nombre      String    // Nombre de la etiqueta
+  color       String    // Color de la etiqueta (Ej: HEX o nombre del color)
+
+  // Relación con tarjetas
+  tarjetas    Tarjeta[] @relation("TarjetaEtiquetas") // Relación con múltiples tarjetas
+
+  // Relación con el creador (opcional)
+  creadorId   Int?      // ID del usuario que creó la etiqueta
+  creador     User?     @relation(fields: [creadorId], references: [id]) // Relación con el modelo User
+}
+
+model TableroUsuario {
+  id         Int      @id @default(autoincrement())
+  userId     Int      // Foreign key a User
+  tableroId  Int      // Foreign key a Tablero
+
+  // Relación con Usuario
+  usuario    User     @relation(fields: [userId], references: [id])
+
+  // Relación con Tablero
+  tablero    Tablero  @relation(fields: [tableroId], references: [id])
+
+  @@unique([userId, tableroId]) // Un usuario no puede estar duplicado en un tablero
+}
+
+model Subtarea {
+  id          Int       @id @default(autoincrement())
+  titulo      String    // Título de la subtarea
+  completado  Boolean   @default(false) // Estado de la subtarea
+  tarjetaId   Int       // Foreign key a Tarjeta
+  tarjeta     Tarjeta   @relation(fields: [tarjetaId], references: [id])
+  createdAt   DateTime  @default(now()) // Fecha de creación
+  updatedAt   DateTime  @updatedAt      // Última actualización
+  userId      Int?      // Foreign key opcional a User
+  usuario     User?     @relation(fields: [userId], references: [id]) // Relación con User
+}
+
+model Comentario {
+  id          Int       @id @default(autoincrement())
+  contenido   String    // Contenido del comentario
+  tarjetaId   Int       // Foreign key a Tarjeta
+  tarjeta     Tarjeta   @relation(fields: [tarjetaId], references: [id])
+  usuarioId   Int       // Usuario que creó el comentario
+  usuario     User      @relation(fields: [usuarioId], references: [id])
+  createdAt   DateTime  @default(now()) // Fecha de creación
+  updatedAt   DateTime  @updatedAt      // Última actualización
+}
+
+model Notificacion {
+  id           Int       @id @default(autoincrement())
+  mensaje      String    // Mensaje de la notificación
+  leido        Boolean   @default(false) // Estado de la notificación
+  usuarioId    Int       // Usuario asociado a la notificación
+  usuario      User      @relation(fields: [usuarioId], references: [id])
+  createdAt    DateTime  @default(now()) // Fecha de creación
+}
+
+model Adjunto {
+  id          Int      @id @default(autoincrement())
+  nombre      String   // Nombre del adjunto
+  url         String   // URL o ruta del adjunto
+  tarjetaId   Int      // Foreign key a la tarjeta
+  tarjeta     Tarjeta  @relation(fields: [tarjetaId], references: [id])
+
+  createdAt   DateTime @default(now()) // Fecha de creación
+  updatedAt   DateTime @updatedAt      // Última actualización
 }
 
 enum Role {

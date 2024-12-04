@@ -1,15 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import formidable, { Files, Fields, File } from "formidable";
 import fs from "fs";
 import path from "path";
-
-// Configuración para deshabilitar el body parser de Next.js
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 // Ruta para guardar las imágenes
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
@@ -34,39 +26,42 @@ export async function GET() {
 
 // POST: Crear una nueva noticia
 export async function POST(request: Request) {
-  const form = formidable({ multiples: false, uploadDir: UPLOAD_DIR, keepExtensions: true });
-
   try {
-    const { fields, files }: { fields: Fields; files: Files } = await new Promise((resolve, reject) => {
-      form.parse(request as any, (err, fields: Fields, files: Files) => {
-        if (err) reject(err);
-        resolve({ fields, files });
-      });
-    });
-
-    // Asegurarse de manejar correctamente los campos que podrían ser arrays
-    const titulo = Array.isArray(fields.titulo) ? fields.titulo[0] : fields.titulo;
-    const descripcion = Array.isArray(fields.descripcion) ? fields.descripcion[0] : fields.descripcion;
-    const userId = Array.isArray(fields.userId) ? fields.userId[0] : fields.userId;
+    const formData = await request.formData();
+    const titulo = formData.get("titulo")?.toString();
+    const descripcion = formData.get("descripcion")?.toString();
+    const userId = formData.get("userId")?.toString();
+    const imagenFile = formData.get("imagen") as File;
 
     if (!titulo || !descripcion || !userId) {
-      return NextResponse.json({ error: "Todos los campos son requeridos" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Todos los campos son requeridos (título, descripción, userId)" },
+        { status: 400 }
+      );
     }
 
-    const imagen = files.imagen as File | undefined;
-    const imagenUrl = imagen ? `/uploads/${path.basename(imagen.filepath)}` : null;
+    let imagenUrl: string | null = null;
+
+    // Manejar la subida de la imagen si está presente
+    if (imagenFile) {
+      const buffer = await imagenFile.arrayBuffer();
+      const fileName = `${Date.now()}-${imagenFile.name}`;
+      const filePath = path.join(UPLOAD_DIR, fileName);
+      fs.writeFileSync(filePath, Buffer.from(buffer));
+      imagenUrl = `/uploads/${fileName}`;
+    }
 
     const noticia = await prisma.noticia.create({
       data: {
         titulo: String(titulo),
         descripcion: String(descripcion),
-        userId: parseInt(userId as string, 10),
+        userId: parseInt(userId, 10),
         imagen: imagenUrl,
         fechaPublicacion: new Date(),
       },
     });
 
-    return NextResponse.json(noticia);
+    return NextResponse.json(noticia, { status: 201 });
   } catch (error) {
     console.error("Error al crear la noticia:", error);
     return NextResponse.json({ error: "Error al crear la noticia" }, { status: 500 });

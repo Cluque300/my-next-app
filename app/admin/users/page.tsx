@@ -17,6 +17,8 @@ import {
   Avatar,
   Box,
   IconButton,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -24,24 +26,28 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 interface User {
   id: string;
-  avatar: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  phone: string;
+  fullname: string;
+  fulllastname: string;
   email: string;
+  foto?: string;
+  role: string;
 }
 
 const UsersPage = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get('/api/autch/user');
         setUsers(response.data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
+      } catch (err) {
+        setError('Error al cargar la lista de usuarios.');
+        console.error('Error fetching users:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -52,12 +58,31 @@ const UsersPage = () => {
     if (confirm(`¿Está seguro que desea eliminar al usuario con ID ${userId}?`)) {
       try {
         await axios.delete(`/api/autch/user/${userId}`);
-        setUsers(users.filter((user) => user.id !== userId));
-      } catch (error) {
-        console.error('Error deleting user:', error);
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      } catch (err) {
+        alert('Error al eliminar el usuario. Intenta nuevamente.');
+        console.error('Error deleting user:', err);
       }
     }
   };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <Alert severity="error" sx={{ mt: 4 }}>
+          {error}
+        </Alert>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg">
@@ -75,42 +100,66 @@ const UsersPage = () => {
           <TableHead>
             <TableRow>
               <TableCell>Usuario</TableCell>
-              <TableCell>Celular</TableCell>
               <TableCell>Correo</TableCell>
+              <TableCell>Rol</TableCell>
               <TableCell>Acción</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Avatar src={`/images/users/${user.avatar}`} sx={{ mr: 2 }} />
-                    <Box>
-                      <Typography variant="body1">{`${user.firstName} ${user.lastName}`}</Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {user.role}
-                      </Typography>
+            {users.map((user) => {
+              const fullName = `${user.fullname} ${user.fulllastname}`.trim();
+              const avatarUrl = user.foto ? `/images/users/${user.foto}` : '/images/default-avatar.png';
+
+              return (
+                <TableRow key={user.id}>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Avatar src={avatarUrl} sx={{ mr: 2 }} />
+                      <Box>
+                        <Typography variant="body1">{fullName}</Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                </TableCell>
-                <TableCell>+57 {user.phone}</TableCell>
-                <TableCell>
-                  <a href={`mailto:${user.email}`}>{user.email}</a>
-                </TableCell>
-                <TableCell>
-                  <IconButton component={Link} href={`/admin/users/${user.id}`} aria-label="Ver usuario">
-                    <VisibilityIcon />
-                  </IconButton>
-                  <IconButton component={Link} href={`/admin/users/${user.id}/edit`} aria-label="Editar usuario">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(user.id)} aria-label="Eliminar usuario" color="error">
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      component={Link}
+                      href={`mailto:${user.email}`}
+                      sx={{
+                        textDecoration: 'none',
+                        color: 'primary.main',
+                        '&:hover': { textDecoration: 'underline' },
+                      }}
+                    >
+                      {user.email}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      component={Link}
+                      href={`/admin/users/${user.id}`}
+                      aria-label={`Ver detalles de ${fullName}`}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                    <IconButton
+                      component={Link}
+                      href={`/admin/users/${user.id}/edit`}
+                      aria-label={`Editar ${fullName}`}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => handleDelete(user.id)}
+                      aria-label={`Eliminar ${fullName}`}
+                      color="error"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

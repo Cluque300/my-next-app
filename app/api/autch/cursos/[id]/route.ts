@@ -25,6 +25,30 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
+// Método para manejar la actualización de un curso
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  const { nombre, descripcion, fecha_inicio, fecha_fin, ubicacion } = await request.json();
+
+  try {
+    const updatedCurso = await prisma.cursos.update({
+      where: { id: Number(id) },
+      data: {
+        nombre,
+        descripcion,
+        fecha_inicio: new Date(fecha_inicio),
+        fecha_fin: new Date(fecha_fin),
+        ubicacion,
+      },
+    });
+
+    return NextResponse.json(updatedCurso, { status: 200 });
+  } catch (error) {
+    console.error('Error updating curso:', error);
+    return NextResponse.json({ error: 'Error updating curso' }, { status: 500 });
+  }
+}
+
 // Método para manejar la eliminación de un curso
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
@@ -72,6 +96,4 @@ export async function POST(request: Request, { params }: { params: { id: string 
     return NextResponse.json({ error: 'Error inscribiendo en el curso' }, { status: 500 });
   }
 }
-
-
 

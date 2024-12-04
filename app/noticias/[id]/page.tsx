@@ -1,20 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress } from '@mui/material';
 import { useParams } from 'next/navigation';
+import { Box, Typography, Card, CardMedia, CardContent } from '@mui/material';
 
-interface Noticia {
-    id: number;
-    titulo: string;
-    descripcion: string;
-    fechaPublicacion?: string; // Posible nombre de campo de fecha
-    fecha_publicacion?: string; // Alternativo nombre de campo de fecha
-}
-
-export default function NoticiaDetailPage() {
+export default function NoticiaPage() {
     const { id } = useParams();
-    const [noticia, setNoticia] = useState<Noticia | null>(null);
+    const [noticia, setNoticia] = useState<any>(null);
 
     useEffect(() => {
         const fetchNoticia = async () => {
@@ -23,78 +15,44 @@ export default function NoticiaDetailPage() {
                 const data = await response.json();
                 setNoticia(data);
             } catch (error) {
-                console.error("Error fetching noticia:", error);
+                console.error('Error al obtener la noticia:', error);
             }
         };
+
         fetchNoticia();
     }, [id]);
 
     if (!noticia) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-                <CircularProgress />
-                <Typography variant="h6" sx={{ mt: 2, color: 'text.secondary' }}>Cargando noticia...</Typography>
+            <Box sx={{ textAlign: 'center', p: 3 }}>
+                <Typography variant="h5">Cargando noticia...</Typography>
             </Box>
         );
     }
 
-    // Determinamos el valor de la fecha usando el campo que esté disponible
-    const fechaPublicacion = noticia.fechaPublicacion || noticia.fecha_publicacion;
-    const fechaFormateada = fechaPublicacion
-        ? new Date(fechaPublicacion).toLocaleDateString('es-ES', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-          })
-        : 'Fecha no disponible';
-
     return (
-        <Box
-            sx={{
-                p: 4,
-                bgcolor: '#f0f4c3',
-                borderRadius: 2,
-                boxShadow: 3,
-                mt: 5,
-                maxWidth: '800px',
-                mx: 'auto',
-            }}
-        >
-            <Typography
-                variant="h4"
-                fontWeight="bold"
-                sx={{
-                    color: '#33691e',
-                    borderBottom: '3px solid #33691e',
-                    paddingBottom: 1,
-                    mb: 2,
-                }}
-            >
-                {noticia.titulo}
-            </Typography>
-
-            <Typography
-                variant="subtitle2"
-                sx={{
-                    color: '#6d6d6d',
-                    mb: 3,
-                    fontStyle: 'italic',
-                }}
-            >
-                Publicado el: {fechaFormateada}
-            </Typography>
-
-            <Typography
-                variant="body1"
-                sx={{
-                    color: '#424242',
-                    lineHeight: 1.7,
-                    textAlign: 'justify',
-                }}
-            >
-                {noticia.descripcion}
-            </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+            <Card sx={{ maxWidth: 600, boxShadow: 3 }}>
+                {noticia.imagen && (
+                    <CardMedia
+                        component="img"
+                        image={noticia.imagen}
+                        alt={noticia.titulo}
+                        sx={{ height: 300 }}
+                    />
+                )}
+                <CardContent>
+                    <Typography variant="h4" gutterBottom>
+                        {noticia.titulo}
+                    </Typography>
+                    <Typography variant="body1" sx={{ mb: 2 }}>
+                        {noticia.descripcion}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                        Publicado el: {new Date(noticia.fechaPublicacion).toLocaleDateString()}
+                    </Typography>
+                </CardContent>
+            </Card>
         </Box>
     );
 }
-
