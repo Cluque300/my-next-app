@@ -14,9 +14,11 @@ interface TarjetaProps {
   listaId: number;
   tableroId: number;
   onDelete: (id: number, listaId: number) => void;
+  onDragStart?: (e: React.DragEvent) => void; // Añadimos onDragStart aquí
+  draggable?: boolean;
 }
 
-export default function Tarjeta({ id, titulo, descripcion, listaId, tableroId, onDelete }: TarjetaProps) {
+export default function Tarjeta({ id, titulo, descripcion, listaId, tableroId, onDelete, onDragStart, draggable }: TarjetaProps) {
   const [openModal, setOpenModal] = useState(false);
   const [showAdjuntos, setShowAdjuntos] = useState(false);
   const [showSubtareas, setShowSubtareas] = useState(false);
@@ -38,7 +40,12 @@ export default function Tarjeta({ id, titulo, descripcion, listaId, tableroId, o
 
   return (
     <>
-      <Card sx={{ mb: 2, borderRadius: 2, boxShadow: 2, p: 2, position: 'relative' }} onClick={handleOpenModal}>
+      <Card 
+        sx={{ mb: 2, borderRadius: 2, boxShadow: 2, p: 2, position: 'relative' }} 
+        onClick={handleOpenModal} 
+        draggable={draggable} // Aseguramos que la tarjeta sea arrastrable
+        onDragStart={onDragStart} // Manejamos el evento de inicio de arrastre
+      >
         <CardContent>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
             {titulo}
@@ -69,14 +76,13 @@ export default function Tarjeta({ id, titulo, descripcion, listaId, tableroId, o
           </Box>
 
           <Collapse in={showSubtareas}>
-            {/* Pasar todas las propiedades requeridas */}
             <Subtareas tableroId={tableroId} listaId={listaId} tarjetaId={id} />
           </Collapse>
           <Collapse in={showComentarios}>
-          <Comentarios tableroId={tableroId} listaId={listaId} tarjetaId={id} />
+            <Comentarios tableroId={tableroId} listaId={listaId} tarjetaId={id} />
           </Collapse>
           <Collapse in={showAdjuntos}>
-            <Adjuntos tarjetaId={id} />
+            <Adjuntos tarjetaId={id} tableroId={tableroId} listaId={listaId} />
           </Collapse>
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>

@@ -33,6 +33,9 @@ export default function TableroDetailPage() {
   const [newListaTitulo, setNewListaTitulo] = useState("");
   const [newTarjetaTitulo, setNewTarjetaTitulo] = useState("");
 
+  const [draggedCardId, setDraggedCardId] = useState<number | null>(null);
+  const [draggedCardListaId, setDraggedCardListaId] = useState<number | null>(null);
+
   // Cargar tablero y listas al inicio
   useEffect(() => {
     if (isNaN(tableroIdNumber)) return; // Aseguramos que el ID es válido
@@ -107,6 +110,71 @@ export default function TableroDetailPage() {
     setNewTarjetaTitulo(""); // Limpiar campo
   };
 
+  // Manejadores para arrastrar
+  const handleDragStart = (id: number, listaId: number) => {
+    setDraggedCardId(id);
+    setDraggedCardListaId(listaId);
+  };
+
+  const handleDrop = async (nuevaListaId: number) => {
+    if (draggedCardId !== null && draggedCardListaId !== null) {
+      try {
+        // Llamada PUT para mover la tarjeta a la nueva lista
+        const response = await fetch(`/api/autch/tableros/${tableroIdNumber}/listas/${nuevaListaId}/tarjetas/mover`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tarjetaId: draggedCardId }),  // Enviar el tarjetaId en el cuerpo
+        });
+  
+        // Verificar si la respuesta fue exitosa
+        if (!response.ok) {
+          console.error("Error al mover la tarjeta. Código de estado:", response.status);
+          const errorData = await response.json();
+          console.error("Error detallado:", errorData);
+          return;
+        }
+  
+        const data = await response.json();
+        console.log("Respuesta del backend:", data);
+  
+        // Verificar que se devuelve la tarjeta
+        if (!data || !data.tarjeta) {
+          console.error("No se ha recibido la tarjeta esperada en la respuesta.");
+          return;
+        }
+  
+        // Actualizar estado local con la nueva tarjeta y lista
+        setTablero((prev) => {
+          if (!prev) return prev;
+  
+          // Eliminar tarjeta de la lista original
+          const updatedListas = prev.listas.map((lista) => {
+            if (lista.id === draggedCardListaId) {
+              const updatedTarjetas = lista.tarjetas.filter((tarjeta) => tarjeta.id !== draggedCardId);
+              return { ...lista, tarjetas: updatedTarjetas };
+            }
+            return lista;
+          });
+  
+          // Añadir la nueva tarjeta a la nueva lista
+          const updatedListasConTarjeta = updatedListas.map((lista) =>
+            lista.id === nuevaListaId
+              ? { ...lista, tarjetas: [...lista.tarjetas, data.tarjeta] }
+              : lista
+          );
+  
+          return { ...prev, listas: updatedListasConTarjeta };
+        });
+      } catch (error) {
+        console.error("Error al mover la tarjeta:", error);
+      }
+    }
+  
+    setDraggedCardId(null);
+    setDraggedCardListaId(null);
+  };
+    
+
   // Mostrar carga mientras se obtienen los datos
   if (!tablero) return <Typography>Cargando...</Typography>;
 
@@ -139,6 +207,8 @@ export default function TableroDetailPage() {
                   transform: "scale(1.03)",
                 },
               }}
+              onDrop={() => handleDrop(lista.id)}
+              onDragOver={(e) => e.preventDefault()}
             >
               <Typography variant="h6" sx={{ fontWeight: "bold", color: "#34495e", mb: 2 }}>
                 {lista.titulo}
@@ -163,6 +233,8 @@ export default function TableroDetailPage() {
                         return { ...prev, listas: updatedListas };
                       });
                     }}
+                    onDragStart={(e) => handleDragStart(tarjeta.id, lista.id)}
+                    draggable={true}
                   />
                 ))}
               </Box>
@@ -179,35 +251,29 @@ export default function TableroDetailPage() {
                     borderRadius: 1,
                     boxShadow: 1,
                     "& .MuiInputBase-root": {
-                      padding: "10px 14px",
+                      padding: "0.5rem",
                     },
                   }}
                 />
                 <Button
-                  onClick={() => handleAddTarjeta(lista.id)}
                   variant="contained"
-                  sx={{
-                    mt: 2,
-                    bgcolor: "#3498db",
-                    color: "#fff",
-                    fontWeight: "bold",
-                    "&:hover": { bgcolor: "#2980b9" },
-                  }}
+                  onClick={() => handleAddTarjeta(lista.id)}
+                  sx={{ mt: 1 }}
                 >
-                  Añadir Tarjeta
+                  Agregar
                 </Button>
               </Box>
             </Box>
           ))
         ) : (
-          <Typography>No se encontraron listas para este tablero.</Typography>
+          <Typography>No hay listas disponibles</Typography>
         )}
       </Box>
 
       {/* Agregar Lista */}
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 4 }}>
         <TextField
-          placeholder="Nueva Lista"
+          placeholder="Nueva lista"
           value={newListaTitulo}
           onChange={(e) => setNewListaTitulo(e.target.value)}
           fullWidth
@@ -216,22 +282,16 @@ export default function TableroDetailPage() {
             borderRadius: 1,
             boxShadow: 1,
             "& .MuiInputBase-root": {
-              padding: "10px 14px",
+              padding: "0.5rem",
             },
           }}
         />
         <Button
-          onClick={handleAddLista}
           variant="contained"
-          sx={{
-            mt: 2,
-            bgcolor: "#3498db",
-            color: "#fff",
-            fontWeight: "bold",
-            "&:hover": { bgcolor: "#2980b9" },
-          }}
+          onClick={handleAddLista}
+          sx={{ mt: 1 }}
         >
-          Añadir Lista
+          Agregar Lista
         </Button>
       </Box>
     </Box>
