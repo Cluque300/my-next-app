@@ -131,7 +131,10 @@ export default function ResponsiveDrawer({ window, children, mobileOpen, onDrawe
           </ListItemIcon>
           <ListItemText primary="Mi Calendario" />
         </ListItemButton>
-        <ListItemButton sx={{ fontSize: "0.8rem", padding: "6px 12px" }}>
+        <ListItemButton
+          onClick={() => handleRedirect("/tableros")} // Redirige a tableros/page.tsx
+          sx={{ fontSize: "0.8rem", padding: "6px 12px" }}
+        >
           <ListItemIcon>
             <AssignmentIcon fontSize="small" />
           </ListItemIcon>

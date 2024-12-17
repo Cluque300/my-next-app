@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, List, ListItem } from '@mui/material';
+import { Box, Typography, TextField, Button, List, ListItem, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Comentario {
   id: number;
-  contenido: string;  // Cambié 'texto' a 'contenido' para que coincida con el backend
-  usuario: { fullname: string };  // Cambié 'autor' por 'usuario.fullname'
+  contenido: string;
+  usuario: { fullname: string };
 }
 
 interface ComentariosProps {
@@ -32,7 +33,7 @@ export default function Comentarios({ tableroId, listaId, tarjetaId }: Comentari
     };
 
     fetchComentarios();
-  }, [tableroId, listaId, tarjetaId]); // Se ejecuta cuando cambia el tarjetaId
+  }, [tableroId, listaId, tarjetaId]);
 
   // Función para añadir un nuevo comentario
   const handleAddComentario = async () => {
@@ -46,11 +47,23 @@ export default function Comentarios({ tableroId, listaId, tarjetaId }: Comentari
 
     const data = await response.json();
     if (response.ok) {
-      // Actualizamos el estado de comentarios
       setComentarios((prev) => [...prev, data]);
-      setNewComentario(''); // Limpiar el campo de texto
+      setNewComentario('');
     } else {
       console.error('Error al agregar el comentario:', data.error);
+    }
+  };
+
+  // Función para eliminar un comentario
+  const handleDeleteComentario = async (comentarioId: number) => {
+    const response = await fetch(`/api/autch/tableros/${tableroId}/listas/${listaId}/tarjetas/${tarjetaId}/comentarios/${comentarioId}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      setComentarios((prev) => prev.filter((comentario) => comentario.id !== comentarioId));
+    } else {
+      console.error('Error al eliminar el comentario');
     }
   };
 
@@ -59,10 +72,13 @@ export default function Comentarios({ tableroId, listaId, tarjetaId }: Comentari
       <Typography variant="h6">Comentarios</Typography>
       <List>
         {comentarios.map((comentario) => (
-          <ListItem key={comentario.id}>
+          <ListItem key={comentario.id} sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography>
-              <strong>{comentario.usuario.fullname}:</strong> {comentario.contenido}  {/* Mostrar el nombre completo del autor */}
+              <strong>{comentario.usuario.fullname}:</strong> {comentario.contenido}
             </Typography>
+            <IconButton onClick={() => handleDeleteComentario(comentario.id)} color="error">
+              <DeleteIcon />
+            </IconButton>
           </ListItem>
         ))}
       </List>

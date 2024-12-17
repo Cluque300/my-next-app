@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// PUT: Actualizar el estado de una subtarea (completado / no completado)
+// PUT: Actualizar el estado de una subtarea (completado / no completado) y la fecha de expiración
 export async function PUT(request: Request, { params }: { params: { tableroId: string; listaId: string; tarjetaId: string; subtareaId: string } }) {
   try {
-    const { completado } = await request.json();
+    const { completado, fecha_expiracion } = await request.json();
     const subtareaId = parseInt(params.subtareaId, 10);
 
     // Validar que subtareaId sea un número válido
@@ -15,10 +15,30 @@ export async function PUT(request: Request, { params }: { params: { tableroId: s
       );
     }
 
-    // Actualizar el estado de la subtarea en la base de datos
+    // Si se proporciona una fecha de expiración, validar que sea una fecha futura
+    if (fecha_expiracion) {
+      const fecha = new Date(fecha_expiracion);
+      if (isNaN(fecha.getTime())) {
+        return NextResponse.json(
+          { error: "La fecha de expiración no es válida" },
+          { status: 400 }
+        );
+      }
+      if (fecha <= new Date()) {
+        return NextResponse.json(
+          { error: "La fecha de expiración debe ser una fecha futura" },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Actualizar la subtarea en la base de datos
     const subtarea = await prisma.subtarea.update({
       where: { id: subtareaId },
-      data: { completado },
+      data: { 
+        completado, 
+        fecha_expiracion: fecha_expiracion ? new Date(fecha_expiracion) : null 
+      },
     });
 
     return NextResponse.json(subtarea);

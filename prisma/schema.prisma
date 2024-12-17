@@ -377,6 +377,7 @@ model Subtarea {
   updatedAt   DateTime  @updatedAt      // Última actualización
   userId      Int?      // Foreign key opcional a User
   usuario     User?     @relation(fields: [userId], references: [id]) // Relación con User
+  fecha_expiracion DateTime? // Nuevo campo para la fecha de expiración
 }
 
 model Comentario {

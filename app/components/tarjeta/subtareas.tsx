@@ -8,6 +8,7 @@ interface Subtarea {
   id: number;
   titulo: string;
   completado: boolean;
+  fecha_expiracion: string | null; // Asegúrate de que esta propiedad exista
 }
 
 interface SubtareasProps {
@@ -19,6 +20,7 @@ interface SubtareasProps {
 export default function Subtareas({ tableroId, listaId, tarjetaId }: SubtareasProps) {
   const [subtareas, setSubtareas] = useState<Subtarea[]>([]);
   const [newSubtarea, setNewSubtarea] = useState('');
+  const [fechaExpiracion, setFechaExpiracion] = useState<string | null>(null); // Estado para la fecha de expiración
 
   // Obtener las subtareas desde el backend al cargar el componente
   useEffect(() => {
@@ -42,7 +44,11 @@ export default function Subtareas({ tableroId, listaId, tarjetaId }: SubtareasPr
     const response = await fetch(`/api/autch/tableros/${tableroId}/listas/${listaId}/tarjetas/${tarjetaId}/subtareas`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ titulo: newSubtarea, completado: false }),
+      body: JSON.stringify({
+        titulo: newSubtarea,
+        completado: false,
+        fecha_expiracion: fechaExpiracion ? new Date(fechaExpiracion).toISOString() : null,
+      }),
     });
 
     const data = await response.json();
@@ -50,6 +56,7 @@ export default function Subtareas({ tableroId, listaId, tarjetaId }: SubtareasPr
       // Actualizamos el estado de subtareas
       setSubtareas((prev) => [...prev, data]);
       setNewSubtarea(''); // Limpiar el campo de texto
+      setFechaExpiracion(null); // Limpiar la fecha de expiración
     } else {
       console.error('Error al agregar la subtarea:', data.error);
     }
@@ -119,6 +126,11 @@ export default function Subtareas({ tableroId, listaId, tarjetaId }: SubtareasPr
               onChange={() => toggleCompletado(subtarea.id)}
             />
             {subtarea.titulo}
+            {subtarea.fecha_expiracion && (
+              <Typography variant="body2" sx={{ ml: 2 }}>
+                {`Fecha de expiración: ${new Date(subtarea.fecha_expiracion).toLocaleDateString()}`}
+              </Typography>
+            )}
             <IconButton
               sx={{ ml: 1 }}
               onClick={() => handleDeleteSubtarea(subtarea.id)}
@@ -137,6 +149,14 @@ export default function Subtareas({ tableroId, listaId, tarjetaId }: SubtareasPr
           value={newSubtarea}
           onChange={(e) => setNewSubtarea(e.target.value)}
           fullWidth
+        />
+        <TextField
+          label="Fecha de expiración"
+          type="date"
+          value={fechaExpiracion || ''}
+          onChange={(e) => setFechaExpiracion(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+          sx={{ ml: 2 }}
         />
         <Button onClick={handleAddSubtarea} sx={{ ml: 1 }}>
           Añadir
